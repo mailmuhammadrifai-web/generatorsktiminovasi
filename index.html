@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator SK Inovasi Bapperida Palopo 2026</title>
+    <title>Generator SK Tim Inovasi Bapperida Palopo 2025</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap" rel="stylesheet">
     <style>
@@ -48,16 +50,26 @@
         
         .sk-table th, .sk-table td {
             border: 1px solid #000000;
-            padding: 6px 10px;
+            padding: 5px 8px;
             text-align: left;
             vertical-align: top;
-            line-height: 1.4;
+            line-height: 1.3;
         }
         
         .sk-table th {
             background-color: #f3f4f6;
             font-weight: bold;
             text-align: center;
+            font-size: 10pt;
+        }
+
+        .group-header {
+            background-color: #e5e7eb !important;
+            font-weight: bold;
+            text-align: center !important;
+            border: 1px solid #000000;
+            padding: 4px !important;
+            font-size: 11pt;
         }
 
         /* Modal Preview */
@@ -105,17 +117,17 @@
         
         .form-input:focus {
             outline: none;
-            ring: 2px;
-            ring-color: #3b82f6;
             border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         /* Document styling */
         .document-line {
-            border-bottom: 1px dotted #000;
-            min-width: 100px;
+            border-bottom: 1px solid #000;
+            min-width: 150px;
             display: inline-block;
             padding-bottom: 2px;
+            margin-left: 10px;
         }
 
         .header-border {
@@ -127,14 +139,14 @@
         /* Signature area */
         .signature-area {
             position: relative;
-            min-height: 120px;
-            margin-top: 20px;
+            min-height: 100px;
+            margin-top: 40px;
         }
         
         .stamp-image {
             position: absolute;
             max-height: 80px;
-            max-width: 200px;
+            max-width: 180px;
             opacity: 0.9;
             z-index: 10;
         }
@@ -145,18 +157,23 @@
     <nav class="bg-blue-900 text-white p-4 shadow-md no-print flex justify-between items-center sticky top-0 z-50">
         <div class="flex items-center gap-3">
             <div class="bg-white p-1 rounded">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Logo_Kota_Palopo.png" alt="Logo Palopo" class="h-10">
+                <div class="h-10 w-10 bg-gray-200 flex items-center justify-center text-gray-600 font-bold text-xs">
+                    LOGO
+                </div>
             </div>
             <div>
                 <h1 class="font-bold leading-none text-lg">BAPPERIDA KOTA PALOPO</h1>
-                <p class="text-xs opacity-80">Generator Surat Keputusan Tim Inovasi Daerah 2026</p>
+                <p class="text-xs opacity-80">Generator Surat Keputusan Tim Pelaksana Inovasi Daerah</p>
             </div>
         </div>
         <div class="flex items-center gap-3">
-            <button onclick="resetForm()" class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded font-medium transition">
+            <button onclick="loadSampleData()" class="bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded font-medium transition text-sm">
+                Load Contoh Data
+            </button>
+            <button onclick="resetForm()" class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded font-medium transition text-sm">
                 Reset Form
             </button>
-            <button onclick="openPreview()" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded font-bold transition flex items-center gap-2">
+            <button onclick="openPreview()" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded font-bold transition flex items-center gap-2 text-sm">
                 <span>👁️ Preview SK</span>
             </button>
         </div>
@@ -174,19 +191,21 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Nomor SK</label>
                         <input type="text" id="inNomor" placeholder="Contoh: 100.3.3.3/214/BAPPERIDA" 
-                               class="form-input" value="100.3.3.3/214/BAPPERIDA" oninput="sync()">
+                               class="form-input" value="" oninput="sync()">
                         <p class="text-xs text-gray-500 mt-1">Format: [Nomor]/[Kode]/[Instansi]</p>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Tanggal SK</label>
-                        <input type="text" id="inTanggal" placeholder="Contoh: 12 Maret 2026" 
-                               class="form-input" value="12 Maret 2026" oninput="sync()">
+                        <input type="text" id="inTanggal" placeholder="Contoh: 6 April 2025" 
+                               class="form-input" value="" oninput="sync()">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Judul Header</label>
+                        <textarea id="inHeader" rows="2" class="form-input uppercase" oninput="sync()">PEMBENTUKAN TIM PELAKSANA INOVASI DAERAH TEKNOLOGI TEPAT GUNA KOTA PALOPO TAHUN 2025</textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Judul Inovasi</label>
-                        <textarea id="inJudul" rows="3" class="form-input uppercase font-bold" oninput="sync()">
-TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOVASI)</textarea>
-                        <p class="text-xs text-gray-500 mt-1">Gunakan huruf kapital untuk judul inovasi</p>
+                        <textarea id="inJudul" rows="2" class="form-input" oninput="sync()">TODDOPULI (Transformasi Olah Data Daerah Palopo untuk Publikasi dan Layanan Inovasi)</textarea>
                     </div>
                 </div>
             </section>
@@ -199,40 +218,13 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
                     </h2>
                     <div class="flex gap-2">
                         <button onclick="addGroup()" class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 font-medium">
-                            + Grup
+                            + Grup Tim
                         </button>
                     </div>
                 </div>
 
                 <div id="groupContainer" class="space-y-4">
-                    <div class="group-item bg-gray-50 p-4 rounded-lg border border-gray-300 relative">
-                        <button onclick="removeGroup(this)" class="absolute top-2 right-2 text-red-500 hover:text-red-700">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                        <input type="text" placeholder="Nama Grup (Contoh: Tim Pelaksana)" 
-                               class="group-title w-full p-2 mb-3 border-b-2 border-blue-500 font-bold text-blue-800 bg-transparent outline-none" 
-                               value="Tim Pelaksana Utama" oninput="sync()">
-                        <div class="member-container space-y-3">
-                            <div class="member-item grid grid-cols-3 gap-2">
-                                <input type="text" placeholder="Nama Lengkap" class="mem-nama form-input text-sm" value="Dr. ANDI MUH. SYAHRIR, S.Sos., M.Si." oninput="sync()">
-                                <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-sm" value="Ketua Tim" oninput="sync()">
-                                <input type="text" placeholder="Unsur/Instansi" class="mem-unsur form-input text-sm" value="BAPPERIDA Kota Palopo" oninput="sync()">
-                            </div>
-                            <div class="member-item grid grid-cols-3 gap-2">
-                                <input type="text" placeholder="Nama Lengkap" class="mem-nama form-input text-sm" value="IR. BUDI SETIAWAN, M.T." oninput="sync()">
-                                <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-sm" value="Anggota" oninput="sync()">
-                                <input type="text" placeholder="Unsur/Instansi" class="mem-unsur form-input text-sm" value="Dinas Komunikasi dan Informatika" oninput="sync()">
-                            </div>
-                        </div>
-                        <button onclick="addMember(this)" class="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                            </svg>
-                            Tambah Anggota
-                        </button>
-                    </div>
+                    <!-- Grup akan ditambahkan di sini -->
                 </div>
                 <p class="text-xs text-gray-500 mt-4">Tambahkan grup untuk struktur tim yang berbeda (Tim IT, Tim Pendamping, dll.)</p>
             </section>
@@ -251,7 +243,7 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Pejabat</label>
                         <input type="text" id="inNamaPejabat" placeholder="NAMA PEJABAT" 
-                               class="form-input uppercase font-bold" value="Dr. H. ANDI SYAHRIR MUH., M.Si." oninput="sync()">
+                               class="form-input uppercase font-bold" value="" oninput="sync()">
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Stempel/Tanda Tangan</label>
@@ -270,21 +262,21 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
             <section class="bg-white p-6 rounded-xl shadow border border-gray-200">
                 <h2 class="font-bold text-gray-800 mb-4 text-lg flex items-center">
                     <span class="step-number">4</span>
-                    Pengaturan Dokumen
+                    Aksi Dokumen
                 </h2>
-                <div class="space-y-3">
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" id="chkHeader" checked class="rounded" onchange="toggleHeader()">
-                        <span class="text-sm">Tampilkan Header Dokumen</span>
-                    </label>
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" id="chkBorders" checked class="rounded" onchange="toggleBorders()">
-                        <span class="text-sm">Tampilkan Garis Tabel</span>
-                    </label>
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" id="chkGuide" checked class="rounded" onchange="toggleGuide()">
-                        <span class="text-sm">Tampilkan Garis Panduan</span>
-                    </label>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="printDocument()" class="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-medium">
+                        🖨️ Cetak Langsung
+                    </button>
+                    <button onclick="downloadPDF()" class="bg-red-600 hover:bg-red-700 text-white py-2 rounded font-medium">
+                        ⬇️ Download PDF
+                    </button>
+                </div>
+                <div class="mt-4 p-3 bg-blue-50 rounded text-sm text-blue-700">
+                    <p class="font-semibold">Tips:</p>
+                    <p>1. Isi semua data sebelum download/print</p>
+                    <p>2. Preview terlebih dahulu untuk memastikan format sesuai</p>
+                    <p>3. Gunakan browser Chrome untuk hasil terbaik</p>
                 </div>
             </section>
         </aside>
@@ -293,43 +285,41 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
             <div class="bg-white shadow-xl rounded-lg p-4 mb-4">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="font-bold text-lg text-gray-800">Preview Dokumen SK</h3>
-                    <button onclick="downloadPDF()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium">
-                        ⬇️ Download PDF
-                    </button>
+                    <div class="text-sm text-gray-600">
+                        <span id="totalAnggota">0</span> Anggota Terdaftar
+                    </div>
                 </div>
                 
-                <div id="sk-document" class="print-container bg-white p-[2.5cm] document-font w-[210mm] min-h-[297mm] border-2 border-gray-300">
+                <div id="sk-document" class="print-container bg-white p-8 document-font w-[210mm] min-h-[297mm] border-2 border-gray-300">
                     <!-- Header -->
-                    <div class="mb-8">
-                        <div class="flex justify-end mb-4">
-                            <div class="text-left">
-                                <p class="mb-1">LAMPIRAN SURAT KEPUTUSAN WALI KOTA PALOPO</p>
-                                <p class="mb-1">NOMOR : <span id="outNomor" class="document-line">100.3.3.3/214/BAPPERIDA</span></p>
-                                <p class="mb-1">TANGGAL: <span id="outTanggal" class="document-line">12 Maret 2026</span></p>
+                    <div class="mb-8 leading-snug">
+                        <div class="mb-2 text-left">
+                            <div class="mb-1">LAMPIRAN SURAT KEPUTUSAN WALI KOTA PALOPO</div>
+                            <div class="mb-1">NOMOR : <span id="outNomor" class="document-line"></span></div>
+                            <div class="mb-1">TANGGAL : <span id="outTanggal" class="document-line"></span></div>
+                        </div>
+                        
+                        <div class="text-center my-6">
+                            <div id="outHeader" class="font-bold text-base uppercase mb-2">
+                                PEMBENTUKAN TIM PELAKSANA INOVASI DAERAH TEKNOLOGI TEPAT GUNA KOTA PALOPO TAHUN 2025
                             </div>
                         </div>
                         
-                        <div class="text-center mb-6">
-                            <div class="font-bold text-lg uppercase border-b-2 border-black pb-2 mb-2">
-                                PEMBENTUKAN TIM PELAKSANA INOVASI DAERAH
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start mb-4">
-                            <div class="font-bold w-32">JUDUL INOVASI :</div>
-                            <div id="outJudul" class="font-bold uppercase flex-1 border-b border-gray-300 pb-1">
-                                TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOVASI)
+                        <div class="mb-4">
+                            <div class="inline-block font-bold">Judul Inovasi :</div>
+                            <div id="outJudul" class="inline-block ml-2">
+                                TODDOPULI (Transformasi Olah Data Daerah Palopo untuk Publikasi dan Layanan Inovasi)
                             </div>
                         </div>
                     </div>
 
                     <!-- Table -->
-                    <table class="sk-table mb-8">
+                    <table class="sk-table">
                         <thead>
                             <tr>
-                                <th class="w-12 text-center">NO</th>
-                                <th class="w-1/3">NAMA</th>
-                                <th class="w-1/3">JABATAN</th>
+                                <th class="w-10 text-center">NO</th>
+                                <th class="w-1/4">NAMA</th>
+                                <th class="w-2/5">JABATAN</th>
                                 <th class="w-1/3">UNSUR/INSTANSI</th>
                             </tr>
                         </thead>
@@ -339,18 +329,18 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
                     </table>
 
                     <!-- Signature -->
-                    <div class="mt-16">
+                    <div class="mt-20">
                         <div class="flex justify-end">
                             <div class="w-1/2 text-center">
-                                <div class="mb-2">
+                                <div class="mb-4">
                                     <span id="outPejabat" class="font-bold uppercase">WALI KOTA PALOPO,</span>
                                 </div>
                                 <div class="signature-area">
                                     <img id="stampImg" class="stamp-image" style="display: none;">
                                 </div>
-                                <div class="mt-20">
-                                    <div id="outNamaPejabat" class="font-bold uppercase border-t border-black pt-2">
-                                        Dr. H. ANDI SYAHRIR MUH., M.Si.
+                                <div class="mt-24">
+                                    <div id="outNamaPejabat" class="font-bold uppercase">
+                                        <div class="border-t border-black pt-2"></div>
                                     </div>
                                 </div>
                             </div>
@@ -369,18 +359,21 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
                 <div class="container mx-auto flex justify-between items-center">
                     <h3 class="font-bold text-xl text-gray-800">Preview Dokumen SK</h3>
                     <div class="flex gap-3">
+                        <button onclick="downloadPDF()" class="bg-red-600 text-white px-6 py-2 rounded font-bold hover:bg-red-700">
+                            ⬇️ Download PDF
+                        </button>
                         <button onclick="printDocument()" class="bg-blue-600 text-white px-6 py-2 rounded font-bold hover:bg-blue-700">
                             🖨️ Cetak Dokumen
                         </button>
-                        <button onclick="closePreview()" class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600">
-                            Tutup Preview
+                        <button onclick="closePreview()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                            ✕ Tutup
                         </button>
                     </div>
                 </div>
             </div>
             <div class="flex-1 overflow-auto p-4">
                 <div class="container mx-auto max-w-4xl">
-                    <div id="modalContent" class="bg-white shadow-2xl p-8">
+                    <div id="modalContent" class="bg-white shadow-2xl p-8 document-font">
                         <!-- Preview content akan dimuat di sini -->
                     </div>
                 </div>
@@ -395,17 +388,21 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
         // Function to sync input with preview
         function sync() {
             // Sync basic data
-            document.getElementById('outNomor').textContent = document.getElementById('inNomor').value || '........................';
-            document.getElementById('outTanggal').textContent = document.getElementById('inTanggal').value || '........................';
-            document.getElementById('outJudul').textContent = document.getElementById('inJudul').value || '..........................................................................................................................................';
-            document.getElementById('outPejabat').textContent = document.getElementById('inPejabat').value || '........................';
-            document.getElementById('outNamaPejabat').textContent = document.getElementById('inNamaPejabat').value || '........................';
+            document.getElementById('outNomor').textContent = document.getElementById('inNomor').value || '................................';
+            document.getElementById('outTanggal').textContent = document.getElementById('inTanggal').value || '................................';
+            document.getElementById('outHeader').textContent = document.getElementById('inHeader').value || '';
+            document.getElementById('outJudul').textContent = document.getElementById('inJudul').value || '';
+            document.getElementById('outPejabat').textContent = document.getElementById('inPejabat').value || '................................';
+            document.getElementById('outNamaPejabat').innerHTML = document.getElementById('inNamaPejabat').value ? 
+                `<div class="border-t border-black pt-2">${document.getElementById('inNamaPejabat').value}</div>` : 
+                '<div class="border-t border-black pt-2"></div>';
 
             // Sync table data
             const tbody = document.getElementById('outTableBody');
             tbody.innerHTML = '';
             
             let counter = 1;
+            let totalAnggota = 0;
             const groups = document.querySelectorAll('.group-item');
             
             groups.forEach(group => {
@@ -413,11 +410,9 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
                 if (title && title.trim() !== '') {
                     // Add group header
                     const headerRow = document.createElement('tr');
-                    headerRow.className = 'bg-gray-100';
+                    headerRow.className = 'group-header';
                     headerRow.innerHTML = `
-                        <td colspan="4" class="font-bold text-center py-2 border border-black">
-                            ${title}
-                        </td>
+                        <td colspan="4" class="font-bold">${title}</td>
                     `;
                     tbody.appendChild(headerRow);
                 }
@@ -428,43 +423,41 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
                     const name = mem.querySelector('.mem-nama').value || '';
                     const jab = mem.querySelector('.mem-jabatan').value || '';
                     const uns = mem.querySelector('.mem-unsur').value || '';
+                    const cat = mem.querySelector('.mem-catatan') ? mem.querySelector('.mem-catatan').value : '';
                     
                     if (name.trim() !== '' || jab.trim() !== '' || uns.trim() !== '') {
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td class="text-center border border-black">${counter}</td>
-                            <td class="border border-black">${name}</td>
-                            <td class="border border-black">${jab}</td>
-                            <td class="border border-black">${uns}</td>
+                            <td class="text-center align-top">${counter}</td>
+                            <td class="align-top">${name}</td>
+                            <td class="align-top">${jab}${cat ? `<br><span style="font-style: italic; font-size: 10pt;">${cat}</span>` : ''}</td>
+                            <td class="align-top">${uns}</td>
                         `;
                         tbody.appendChild(row);
                         counter++;
+                        totalAnggota++;
                     }
                 });
-                
-                // Add spacing between groups
-                if (group !== groups[groups.length - 1]) {
-                    const spacerRow = document.createElement('tr');
-                    spacerRow.innerHTML = `<td colspan="4" class="py-1"></td>`;
-                    tbody.appendChild(spacerRow);
-                }
             });
+
+            // Update total anggota
+            document.getElementById('totalAnggota').textContent = totalAnggota;
 
             // If no data, show empty row
             if (tbody.children.length === 0) {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td class="text-center border border-black">1</td>
-                    <td class="border border-black">.............................................................................................................................</td>
-                    <td class="border border-black">.............................................................................................................................</td>
-                    <td class="border border-black">.............................................................................................................................</td>
+                    <td class="text-center">1</td>
+                    <td>............................................................................................................................................</td>
+                    <td>............................................................................................................................................</td>
+                    <td>............................................................................................................................................</td>
                 `;
                 tbody.appendChild(row);
             }
         }
 
         // Function to add new group
-        function addGroup() {
+        function addGroup(title = '', members = []) {
             const container = document.getElementById('groupContainer');
             const div = document.createElement('div');
             div.className = 'group-item bg-gray-50 p-4 rounded-lg border border-gray-300 relative';
@@ -474,21 +467,56 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
-                <input type="text" placeholder="Nama Grup (Contoh: Tim IT / Tim Monev)" 
+                <input type="text" placeholder="Nama Grup (Contoh: Tim Pelaksana Utama)" 
                        class="group-title w-full p-2 mb-3 border-b-2 border-blue-500 font-bold text-blue-800 bg-transparent outline-none" 
-                       value="" oninput="sync()">
+                       value="${title}" oninput="sync()">
                 <div class="member-container space-y-3">
-                    <div class="member-item grid grid-cols-3 gap-2">
-                        <input type="text" placeholder="Nama Lengkap" class="mem-nama form-input text-sm" oninput="sync()">
-                        <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-sm" oninput="sync()">
-                        <input type="text" placeholder="Unsur/Instansi" class="mem-unsur form-input text-sm" oninput="sync()">
-                    </div>
+                    ${members.length > 0 ? members.map(member => `
+                        <div class="member-item grid grid-cols-4 gap-2">
+                            <input type="text" placeholder="Nama Lengkap" class="mem-nama form-input text-sm" 
+                                   value="${member.nama || ''}" oninput="sync()">
+                            <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-sm" 
+                                   value="${member.jabatan || ''}" oninput="sync()">
+                            <input type="text" placeholder="Unsur/Instansi" class="mem-unsur form-input text-sm" 
+                                   value="${member.unsur || ''}" oninput="sync()">
+                            <input type="text" placeholder="Catatan" class="mem-catatan form-input text-sm" 
+                                   value="${member.catatan || ''}" oninput="sync()">
+                        </div>
+                    `).join('') : `
+                        <div class="member-item grid grid-cols-4 gap-2">
+                            <input type="text" placeholder="Nama Lengkap" class="mem-nama form-input text-sm" oninput="sync()">
+                            <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-sm" oninput="sync()">
+                            <input type="text" placeholder="Unsur/Instansi" class="mem-unsur form-input text-sm" oninput="sync()">
+                            <input type="text" placeholder="Catatan" class="mem-catatan form-input text-sm" oninput="sync()">
+                        </div>
+                    `}
                 </div>
                 <button onclick="addMember(this)" class="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
                     Tambah Anggota
+                </button>
+            `;
+            container.appendChild(div);
+            sync();
+        }
+
+        // Function to add member to group
+        function addMember(button) {
+            const container = button.previousElementSibling;
+            const div = document.createElement('div');
+            div.className = 'member-item grid grid-cols-4 gap-2 relative group';
+            div.innerHTML = `
+                <input type="text" placeholder="Nama Lengkap" class="mem-nama form-input text-sm" oninput="sync()">
+                <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-sm" oninput="sync()">
+                <input type="text" placeholder="Unsur/Instansi" class="mem-unsur form-input text-sm" oninput="sync()">
+                <input type="text" placeholder="Catatan" class="mem-catatan form-input text-sm" oninput="sync()">
+                <button onclick="this.parentElement.remove(); sync()" 
+                        class="absolute -right-8 top-1/2 transform -translate-y-1/2 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                 </button>
             `;
             container.appendChild(div);
@@ -503,26 +531,6 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
             } else {
                 alert('Minimal harus ada satu grup!');
             }
-        }
-
-        // Function to add member to group
-        function addMember(button) {
-            const container = button.previousElementSibling;
-            const div = document.createElement('div');
-            div.className = 'member-item grid grid-cols-3 gap-2 relative group';
-            div.innerHTML = `
-                <input type="text" placeholder="Nama Lengkap" class="mem-nama form-input text-sm" oninput="sync()">
-                <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-sm" oninput="sync()">
-                <input type="text" placeholder="Unsur/Instansi" class="mem-unsur form-input text-sm" oninput="sync()">
-                <button onclick="this.parentElement.remove(); sync()" 
-                        class="absolute -right-8 top-1/2 transform -translate-y-1/2 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            `;
-            container.appendChild(div);
-            sync();
         }
 
         // Function to preview stamp image
@@ -557,6 +565,9 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
             clone.querySelectorAll('input, button, textarea').forEach(el => el.remove());
             clone.classList.add('print-margin');
             clone.style.border = 'none';
+            clone.style.padding = '2.5cm 2cm';
+            clone.style.width = '210mm';
+            clone.style.minHeight = '297mm';
             
             // Add stamp if exists
             if (currentStamp) {
@@ -591,8 +602,9 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>SK Inovasi Bapperida Palopo</title>
+                    <title>SK Tim Inovasi Bapperida Palopo</title>
                     <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap');
                         body {
                             font-family: 'Times New Roman', Times, serif;
                             font-size: 12pt;
@@ -606,27 +618,38 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
                         }
                         .sk-table th, .sk-table td {
                             border: 1px solid #000000;
-                            padding: 6px 10px;
+                            padding: 5px 8px;
                             text-align: left;
+                            vertical-align: top;
                         }
                         .sk-table th {
                             background-color: #f3f4f6;
                             font-weight: bold;
                             text-align: center;
+                            font-size: 10pt;
+                        }
+                        .group-header {
+                            background-color: #e5e7eb !important;
+                            font-weight: bold;
+                            text-align: center !important;
+                            border: 1px solid #000000;
+                            padding: 4px !important;
                         }
                         .document-line {
-                            border-bottom: 1px dotted #000;
-                            min-width: 100px;
+                            border-bottom: 1px solid #000;
+                            min-width: 150px;
                             display: inline-block;
+                            margin-left: 10px;
                         }
                         .signature-area {
                             position: relative;
-                            min-height: 120px;
+                            min-height: 100px;
+                            margin-top: 40px;
                         }
                         .stamp-image {
                             position: absolute;
                             max-height: 80px;
-                            max-width: 200px;
+                            max-width: 180px;
                             opacity: 0.9;
                         }
                         @media print {
@@ -666,9 +689,89 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
             };
         }
 
-        // Function to download as PDF (using browser's print to PDF)
-        function downloadPDF() {
-            printDocument();
+        // Function to download as PDF
+        async function downloadPDF() {
+            try {
+                // Show loading
+                const originalText = event.target.textContent;
+                event.target.innerHTML = '⏳ Membuat PDF...';
+                event.target.disabled = true;
+                
+                // Create a clone for PDF generation
+                const originalDoc = document.getElementById('sk-document');
+                const clone = originalDoc.cloneNode(true);
+                
+                // Clean up clone
+                clone.querySelectorAll('input, button, textarea').forEach(el => el.remove());
+                clone.style.border = 'none';
+                clone.style.padding = '2.5cm 2cm';
+                clone.style.width = '210mm';
+                clone.style.minHeight = '297mm';
+                clone.style.backgroundColor = 'white';
+                
+                // Add stamp if exists
+                if (currentStamp) {
+                    const stampImg = clone.querySelector('#stampImg');
+                    if (stampImg) {
+                        stampImg.src = currentStamp;
+                        stampImg.style.display = 'block';
+                    }
+                }
+                
+                // Create temporary container
+                const tempContainer = document.createElement('div');
+                tempContainer.style.position = 'fixed';
+                tempContainer.style.left = '-9999px';
+                tempContainer.style.top = '0';
+                tempContainer.appendChild(clone);
+                document.body.appendChild(tempContainer);
+                
+                // Use html2canvas to capture
+                const canvas = await html2canvas(clone, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff'
+                });
+                
+                // Remove temp container
+                document.body.removeChild(tempContainer);
+                
+                // Convert to PDF
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+                
+                const imgData = canvas.toDataURL('image/png');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                
+                // Save PDF
+                const nomorSK = document.getElementById('inNomor').value || 'SK-TIM-INOVASI';
+                const tanggalSK = document.getElementById('inTanggal').value || '2025';
+                const fileName = `SK_TIM_INOVASI_${nomorSK.replace(/[\/\\:*?"<>|]/g, '_')}_${tanggalSK.replace(/ /g, '_')}.pdf`;
+                
+                pdf.save(fileName);
+                
+                // Reset button
+                event.target.innerHTML = originalText;
+                event.target.disabled = false;
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('Terjadi kesalahan saat membuat PDF. Silakan coba lagi atau gunakan fitur cetak browser.');
+                
+                // Reset button
+                if (event && event.target) {
+                    event.target.innerHTML = '⬇️ Download PDF';
+                    event.target.disabled = false;
+                }
+            }
         }
 
         // Function to reset form
@@ -677,7 +780,8 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
                 // Reset inputs
                 document.getElementById('inNomor').value = '';
                 document.getElementById('inTanggal').value = '';
-                document.getElementById('inJudul').value = '';
+                document.getElementById('inHeader').value = 'PEMBENTUKAN TIM PELAKSANA INOVASI DAERAH TEKNOLOGI TEPAT GUNA KOTA PALOPO TAHUN 2025';
+                document.getElementById('inJudul').value = 'TODDOPULI (Transformasi Olah Data Daerah Palopo untuk Publikasi dan Layanan Inovasi)';
                 document.getElementById('inPejabat').value = 'WALI KOTA PALOPO,';
                 document.getElementById('inNamaPejabat').value = '';
                 document.getElementById('inStamp').value = '';
@@ -687,27 +791,7 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
                 groupContainer.innerHTML = '';
                 
                 // Add default group
-                const defaultGroup = document.createElement('div');
-                defaultGroup.className = 'group-item bg-gray-50 p-4 rounded-lg border border-gray-300 relative';
-                defaultGroup.innerHTML = `
-                    <input type="text" placeholder="Nama Grup (Contoh: Tim Pelaksana)" 
-                           class="group-title w-full p-2 mb-3 border-b-2 border-blue-500 font-bold text-blue-800 bg-transparent outline-none" 
-                           value="Tim Pelaksana Utama" oninput="sync()">
-                    <div class="member-container space-y-3">
-                        <div class="member-item grid grid-cols-3 gap-2">
-                            <input type="text" placeholder="Nama Lengkap" class="mem-nama form-input text-sm" oninput="sync()">
-                            <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-sm" oninput="sync()">
-                            <input type="text" placeholder="Unsur/Instansi" class="mem-unsur form-input text-sm" oninput="sync()">
-                        </div>
-                    </div>
-                    <button onclick="addMember(this)" class="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        Tambah Anggota
-                    </button>
-                `;
-                groupContainer.appendChild(defaultGroup);
+                addGroup();
                 
                 // Clear stamp
                 clearStamp();
@@ -717,35 +801,89 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
             }
         }
 
-        // Toggle functions for document settings
-        function toggleHeader() {
-            const header = document.querySelector('#sk-document > div:first-child');
-            if (header) {
-                header.style.display = document.getElementById('chkHeader').checked ? 'block' : 'none';
-            }
-        }
-
-        function toggleBorders() {
-            const table = document.querySelector('.sk-table');
-            if (table) {
-                const borderStyle = document.getElementById('chkBorders').checked ? '1px solid #000000' : 'none';
-                table.querySelectorAll('th, td').forEach(cell => {
-                    cell.style.border = borderStyle;
-                });
-            }
-        }
-
-        function toggleGuide() {
-            const doc = document.getElementById('sk-document');
-            if (document.getElementById('chkGuide').checked) {
-                doc.classList.add('border-2', 'border-gray-300');
-            } else {
-                doc.classList.remove('border-2', 'border-gray-300');
+        // Function to load sample data from the PDF
+        function loadSampleData() {
+            if (confirm('Load contoh data dari SK yang diunggah? Data saat ini akan digantikan.')) {
+                // Set basic data
+                document.getElementById('inNomor').value = '100.3.3.3/214/BAPPERIDA';
+                document.getElementById('inTanggal').value = '6 April 2025';
+                document.getElementById('inHeader').value = 'PEMBENTUKAN TIM PELAKSANA INOVASI DAERAH TEKNOLOGI TEPAT GUNA KOTA PALOPO TAHUN 2025';
+                document.getElementById('inJudul').value = 'TODDOPULI (Transformasi Olah Data Daerah Palopo untuk Publikasi dan Layanan Inovasi)';
+                document.getElementById('inNamaPejabat').value = 'NAILI';
+                
+                // Clear existing groups
+                const groupContainer = document.getElementById('groupContainer');
+                groupContainer.innerHTML = '';
+                
+                // Add groups with sample data
+                addGroup('Tim Pelaksana Utama', [
+                    { nama: 'Hj. Sitti Baderia, S.Pd., M.Si', jabatan: 'Kepala Balitbangda Kota Palopo', unsur: 'Penanggung Jawab' },
+                    { nama: 'Muh. Ashari Biduna, S.Sos', jabatan: 'Plt. Sekretaris Balitbangda Kota Palopo', unsur: 'Pengarah 1' },
+                    { nama: 'Suciati, S.H.', jabatan: 'Kepala Bidang Pembangunan, Inovasi, dan Teknologi Balitbangda Kota Palopo', unsur: 'Pengarah 2' },
+                    { nama: 'Muhammad Rifai, S.E.', jabatan: 'Analis Pemanfaatan Ilmu Pengetahuan dan Teknologi Ahli Pertama', unsur: 'Ketua Tim', catatan: 'Pengumpulan dan Verifikasi Data Inovasi' },
+                    { nama: 'Muh. Kiprah, S.M.', jabatan: 'Analis Pemanfaatan Ilmu Pengetahuan dan Teknologi Ahli Pertama', unsur: 'Anggota Tim' },
+                    { nama: 'Mila Agsari, S.T.', jabatan: 'Analis Pemanfaatan Ilmu Pengetahuan dan Teknologi Ahli Pertama', unsur: 'Anggota Tim' },
+                    { nama: 'Regita Cahyani, S.E.', jabatan: 'Analis Pemanfaatan Ilmu Pengetahuan dan Teknologi Ahli Pertama', unsur: 'Anggota Tim', catatan: 'Dokumentasi Kegiatan dan Pengarsipan' },
+                    { nama: 'Try Wahyuni Akbar, S.M.', jabatan: 'Analis Pemanfaatan Ilmu Pengetahuan dan Teknologi Ahli Pertama', unsur: 'Anggota Tim' },
+                    { nama: 'Reskiana Dewi, S.M.', jabatan: 'Analis Pemanfaatan Ilmu Pengetahuan dan Teknologi Ahli Pertama', unsur: 'Anggota Tim' },
+                    { nama: 'Atika Dwi Anjani AR, S.H.', jabatan: 'Penyusun Materi Hukum dan Perundang-undangan', unsur: 'Anggota Tim', catatan: 'Pendukung Hukum dan Tata Laksana Daerah' }
+                ]);
+                
+                addGroup('Tim Perencana Inovasi', [
+                    { nama: 'Annisa Anastasia, S.H.', jabatan: 'Penyusun Materi Hukum dan Perundang-undangan', unsur: 'Anggota Tim' },
+                    { nama: 'Achmad, S.E. M.M.', jabatan: 'Kasubag Perencanaan, Keuangan, EV & T L', unsur: 'Anggota' },
+                    { nama: 'Haslini Tahir Gani, S.E.', jabatan: 'Kasubag Umum & Kepegawaian', unsur: 'Anggota' },
+                    { nama: 'Arni Hasriani Hasan Sainong, S.T.', jabatan: 'Fungsional Peneliti Ahli Muda', unsur: 'Anggota' },
+                    { nama: 'Masdiyah, S.E.', jabatan: 'Fungsional Peneliti Ahli Muda', unsur: 'Anggota' },
+                    { nama: 'A. Heikal Munarka, S.T., M.Si', jabatan: 'Fungsional Peneliti Ahli Muda', unsur: 'Anggota' }
+                ]);
+                
+                addGroup('Tim Pendukung Pengelolaan Inovasi', [
+                    { nama: 'Muhammad Harun Al\'Rasyid, S.AN', jabatan: 'Analis Sumber Daya IPTEK', unsur: 'Anggota Tim' },
+                    { nama: 'Ariani, S.AN.', jabatan: 'Operator Layanan', unsur: 'Anggota Tim' },
+                    { nama: 'Ratnawati Kasmir, S.M.', jabatan: 'Operator Layanan', unsur: 'Anggota Tim' },
+                    { nama: 'Eka Wulandari, S.M.', jabatan: 'Operator Layanan', unsur: 'Anggota Tim' },
+                    { nama: 'Nurlia, S.M.', jabatan: 'Operator Layanan', unsur: 'Anggota Tim' },
+                    { nama: 'Novia Erista, S.Kom', jabatan: 'Operator Layanan', unsur: 'Anggota Tim' },
+                    { nama: 'Fadila Sari', jabatan: 'Operator Layanan', unsur: 'Anggota Tim' },
+                    { nama: 'Andi Tiara Nurvalina, S.H.', jabatan: 'Operator Layanan', unsur: 'Anggota Tim' },
+                    { nama: 'Adrian Pratama Putra, S.M.', jabatan: 'Operator Layanan', unsur: 'Anggota Tim' }
+                ]);
+                
+                addGroup('Tim IT/Server', [
+                    { nama: 'Ramlan, S.Kom', jabatan: 'Kominfo', unsur: 'Koordinator tim Tim' },
+                    { nama: 'Reski Ramadhan', jabatan: 'Kominfo', unsur: 'Anggota tim Tim' },
+                    { nama: 'Epyanta Pinem', jabatan: 'Kominfo', unsur: 'Anggota tim Tim' }
+                ]);
+                
+                addGroup('Tim Monitoring dan Evaluasi', [
+                    { nama: 'Rizal, S.E.', jabatan: 'Staf Bappeda Kab. Luwu', unsur: 'Stakeholder' },
+                    { nama: 'Ikrom Trianto, S.T', jabatan: 'PNGO Yayasan Lestari Mulya', unsur: 'Stakeholder', catatan: 'Pendamping Inovasi Eksternal' }
+                ]);
+                
+                addGroup('Media Pendukung Inovasi', [
+                    { nama: 'dr. Rachmawati', jabatan: 'LAN Makassar', unsur: 'Stakeholder' },
+                    { nama: 'Annisa Mifrohatun Fatiyah, S.I.A., M.Sc', jabatan: 'LAN Makassar', unsur: 'Stakeholder' },
+                    { nama: 'SeruYA', jabatan: 'Pimpinan Redaksi', unsur: 'Stakeholder' },
+                    { nama: 'Palopo Pos', jabatan: 'Pimpinan Redaksi', unsur: 'Stakeholder' },
+                    { nama: 'Cahaya Madani', jabatan: 'Toko ATK', unsur: 'Stakeholder', catatan: 'Usaha Pendukung Inovasi' },
+                    { nama: 'Dr. Syahiruddin Syah, M.Si', jabatan: 'Universitas Andi Djemma', unsur: 'Stakeholder', catatan: 'Akademisi Pendukung Inovasi' },
+                    { nama: 'Imam Pribadi, S.Pd., M.Pdi', jabatan: 'UIN Palopo', unsur: 'Stakeholder' }
+                ]);
+                
+                // Sync
+                sync();
+                
+                alert('Contoh data berhasil dimuat!');
             }
         }
 
         // Initialize on load
         window.onload = function() {
+            // Add initial group
+            addGroup();
+            
+            // Sync initial data
             sync();
             
             // Add keyboard shortcuts
@@ -766,93 +904,6 @@ TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOV
                 }
             });
         };
-
-        // Auto-save to localStorage
-        setInterval(function() {
-            const formData = {
-                nomor: document.getElementById('inNomor').value,
-                tanggal: document.getElementById('inTanggal').value,
-                judul: document.getElementById('inJudul').value,
-                pejabat: document.getElementById('inPejabat').value,
-                namaPejabat: document.getElementById('inNamaPejabat').value,
-                groups: []
-            };
-            
-            document.querySelectorAll('.group-item').forEach(group => {
-                const groupData = {
-                    title: group.querySelector('.group-title').value,
-                    members: []
-                };
-                
-                group.querySelectorAll('.member-item').forEach(member => {
-                    groupData.members.push({
-                        nama: member.querySelector('.mem-nama').value,
-                        jabatan: member.querySelector('.mem-jabatan').value,
-                        unsur: member.querySelector('.mem-unsur').value
-                    });
-                });
-                
-                formData.groups.push(groupData);
-            });
-            
-            localStorage.setItem('skFormData', JSON.stringify(formData));
-        }, 3000);
-
-        // Load from localStorage if exists
-        window.addEventListener('load', function() {
-            const savedData = localStorage.getItem('skFormData');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-                
-                document.getElementById('inNomor').value = data.nomor || '';
-                document.getElementById('inTanggal').value = data.tanggal || '';
-                document.getElementById('inJudul').value = data.judul || '';
-                document.getElementById('inPejabat').value = data.pejabat || 'WALI KOTA PALOPO,';
-                document.getElementById('inNamaPejabat').value = data.namaPejabat || '';
-                
-                // Load groups
-                if (data.groups && data.groups.length > 0) {
-                    const container = document.getElementById('groupContainer');
-                    container.innerHTML = '';
-                    
-                    data.groups.forEach((group, index) => {
-                        const groupDiv = document.createElement('div');
-                        groupDiv.className = 'group-item bg-gray-50 p-4 rounded-lg border border-gray-300 relative';
-                        groupDiv.innerHTML = `
-                            ${index > 0 ? `<button onclick="removeGroup(this)" class="absolute top-2 right-2 text-red-500 hover:text-red-700">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                            </button>` : ''}
-                            <input type="text" placeholder="Nama Grup" 
-                                   class="group-title w-full p-2 mb-3 border-b-2 border-blue-500 font-bold text-blue-800 bg-transparent outline-none" 
-                                   value="${group.title || ''}" oninput="sync()">
-                            <div class="member-container space-y-3">
-                                ${group.members.map(member => `
-                                    <div class="member-item grid grid-cols-3 gap-2">
-                                        <input type="text" placeholder="Nama Lengkap" class="mem-nama form-input text-sm" 
-                                               value="${member.nama || ''}" oninput="sync()">
-                                        <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-sm" 
-                                               value="${member.jabatan || ''}" oninput="sync()">
-                                        <input type="text" placeholder="Unsur/Instansi" class="mem-unsur form-input text-sm" 
-                                               value="${member.unsur || ''}" oninput="sync()">
-                                    </div>
-                                `).join('')}
-                            </div>
-                            <button onclick="addMember(this)" class="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                </svg>
-                                Tambah Anggota
-                            </button>
-                        `;
-                        container.appendChild(groupDiv);
-                    });
-                }
-                
-                sync();
-            }
-        });
     </script>
 </body>
 </html>
