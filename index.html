@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator SK Inovasi Bapperida Palopo 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+        }
+        
+        .document-font {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12pt;
+            line-height: 1.5;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { 
+                background: white !important; 
+                padding: 0 !important; 
+                margin: 0 !important;
+            }
+            .print-container { 
+                box-shadow: none !important; 
+                margin: 0 !important; 
+                padding: 0 !important;
+                width: 100% !important;
+            }
+            .page-break { page-break-before: always; }
+            .print-margin {
+                margin: 2.5cm 2cm !important;
+            }
+        }
+
+        .sk-table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 11pt;
+        }
+        
+        .sk-table th, .sk-table td {
+            border: 1px solid #000000;
+            padding: 6px 10px;
+            text-align: left;
+            vertical-align: top;
+            line-height: 1.4;
+        }
+        
+        .sk-table th {
+            background-color: #f3f4f6;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Modal Preview */
+        #previewModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        #previewModal.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Header Numbering */
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background-color: #1e40af;
+            color: white;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        /* Input styling */
+        .form-input {
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 8px 12px;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            ring: 2px;
+            ring-color: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        /* Document styling */
+        .document-line {
+            border-bottom: 1px dotted #000;
+            min-width: 100px;
+            display: inline-block;
+            padding-bottom: 2px;
+        }
+
+        .header-border {
+            border-bottom: 2px solid #000;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+        }
+
+        /* Signature area */
+        .signature-area {
+            position: relative;
+            min-height: 120px;
+            margin-top: 20px;
+        }
+        
+        .stamp-image {
+            position: absolute;
+            max-height: 80px;
+            max-width: 200px;
+            opacity: 0.9;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen">
+
+    <nav class="bg-blue-900 text-white p-4 shadow-md no-print flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="bg-white p-1 rounded">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Logo_Kota_Palopo.png" alt="Logo Palopo" class="h-10">
+            </div>
+            <div>
+                <h1 class="font-bold leading-none text-lg">BAPPERIDA KOTA PALOPO</h1>
+                <p class="text-xs opacity-80">Generator Surat Keputusan Tim Inovasi Daerah 2026</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="resetForm()" class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded font-medium transition">
+                Reset Form
+            </button>
+            <button onclick="openPreview()" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded font-bold transition flex items-center gap-2">
+                <span>👁️ Preview SK</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="flex flex-col lg:flex-row no-print p-4 gap-4">
+        <aside class="lg:w-2/5 space-y-6">
+            
+            <section class="bg-white p-6 rounded-xl shadow border border-gray-200">
+                <h2 class="font-bold text-gray-800 mb-4 text-lg flex items-center">
+                    <span class="step-number">1</span>
+                    Data Administrasi SK
+                </h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nomor SK</label>
+                        <input type="text" id="inNomor" placeholder="Contoh: 100.3.3.3/214/BAPPERIDA" 
+                               class="form-input" value="100.3.3.3/214/BAPPERIDA" oninput="sync()">
+                        <p class="text-xs text-gray-500 mt-1">Format: [Nomor]/[Kode]/[Instansi]</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Tanggal SK</label>
+                        <input type="text" id="inTanggal" placeholder="Contoh: 12 Maret 2026" 
+                               class="form-input" value="12 Maret 2026" oninput="sync()">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Judul Inovasi</label>
+                        <textarea id="inJudul" rows="3" class="form-input uppercase font-bold" oninput="sync()">
+TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOVASI)</textarea>
+                        <p class="text-xs text-gray-500 mt-1">Gunakan huruf kapital untuk judul inovasi</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white p-6 rounded-xl shadow border border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-bold text-gray-800 text-lg flex items-center">
+                        <span class="step-number">2</span>
+                        Struktur Tim & Personel
+                    </h2>
+                    <div class="flex gap-2">
+                        <button onclick="addGroup()" class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 font-medium">
+                            + Grup
+                        </button>
+                    </div>
+                </div>
+
+                <div id="groupContainer" class="space-y-4">
+                    <div class="group-item bg-gray-50 p-4 rounded-lg border border-gray-300 relative">
+                        <button onclick="removeGroup(this)" class="absolute top-2 right-2 text-red-500 hover:text-red-700">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                        <input type="text" placeholder="Nama Grup (Contoh: Tim Pelaksana)" 
+                               class="group-title w-full p-2 mb-3 border-b-2 border-blue-500 font-bold text-blue-800 bg-transparent outline-none" 
+                               value="Tim Pelaksana Utama" oninput="sync()">
+                        <div class="member-container space-y-3">
+                            <div class="member-item grid grid-cols-3 gap-2">
+                                <input type="text" placeholder="Nama Lengkap" class="mem-nama form-input text-sm" value="Dr. ANDI MUH. SYAHRIR, S.Sos., M.Si." oninput="sync()">
+                                <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-sm" value="Ketua Tim" oninput="sync()">
+                                <input type="text" placeholder="Unsur/Instansi" class="mem-unsur form-input text-sm" value="BAPPERIDA Kota Palopo" oninput="sync()">
+                            </div>
+                            <div class="member-item grid grid-cols-3 gap-2">
+                                <input type="text" placeholder="Nama Lengkap" class="mem-nama form-input text-sm" value="IR. BUDI SETIAWAN, M.T." oninput="sync()">
+                                <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-sm" value="Anggota" oninput="sync()">
+                                <input type="text" placeholder="Unsur/Instansi" class="mem-unsur form-input text-sm" value="Dinas Komunikasi dan Informatika" oninput="sync()">
+                            </div>
+                        </div>
+                        <button onclick="addMember(this)" class="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Tambah Anggota
+                        </button>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-4">Tambahkan grup untuk struktur tim yang berbeda (Tim IT, Tim Pendamping, dll.)</p>
+            </section>
+
+            <section class="bg-white p-6 rounded-xl shadow border border-gray-200">
+                <h2 class="font-bold text-gray-800 mb-4 text-lg flex items-center">
+                    <span class="step-number">3</span>
+                    Tanda Tangan & Stempel
+                </h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Pejabat Penandatangan</label>
+                        <input type="text" id="inPejabat" value="WALI KOTA PALOPO," 
+                               class="form-input uppercase font-bold" oninput="sync()">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Pejabat</label>
+                        <input type="text" id="inNamaPejabat" placeholder="NAMA PEJABAT" 
+                               class="form-input uppercase font-bold" value="Dr. H. ANDI SYAHRIR MUH., M.Si." oninput="sync()">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Stempel/Tanda Tangan</label>
+                        <div class="flex items-center gap-3">
+                            <input type="file" id="inStamp" accept="image/png,image/jpeg" 
+                                   class="form-input p-1 text-sm" onchange="previewImage(event)">
+                            <button onclick="clearStamp()" class="text-sm text-red-600 hover:text-red-800">
+                                Hapus
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Format: PNG atau JPG dengan latar transparan</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white p-6 rounded-xl shadow border border-gray-200">
+                <h2 class="font-bold text-gray-800 mb-4 text-lg flex items-center">
+                    <span class="step-number">4</span>
+                    Pengaturan Dokumen
+                </h2>
+                <div class="space-y-3">
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" id="chkHeader" checked class="rounded" onchange="toggleHeader()">
+                        <span class="text-sm">Tampilkan Header Dokumen</span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" id="chkBorders" checked class="rounded" onchange="toggleBorders()">
+                        <span class="text-sm">Tampilkan Garis Tabel</span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" id="chkGuide" checked class="rounded" onchange="toggleGuide()">
+                        <span class="text-sm">Tampilkan Garis Panduan</span>
+                    </label>
+                </div>
+            </section>
+        </aside>
+
+        <main class="lg:w-3/5">
+            <div class="bg-white shadow-xl rounded-lg p-4 mb-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg text-gray-800">Preview Dokumen SK</h3>
+                    <button onclick="downloadPDF()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium">
+                        ⬇️ Download PDF
+                    </button>
+                </div>
+                
+                <div id="sk-document" class="print-container bg-white p-[2.5cm] document-font w-[210mm] min-h-[297mm] border-2 border-gray-300">
+                    <!-- Header -->
+                    <div class="mb-8">
+                        <div class="flex justify-end mb-4">
+                            <div class="text-left">
+                                <p class="mb-1">LAMPIRAN SURAT KEPUTUSAN WALI KOTA PALOPO</p>
+                                <p class="mb-1">NOMOR : <span id="outNomor" class="document-line">100.3.3.3/214/BAPPERIDA</span></p>
+                                <p class="mb-1">TANGGAL: <span id="outTanggal" class="document-line">12 Maret 2026</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mb-6">
+                            <div class="font-bold text-lg uppercase border-b-2 border-black pb-2 mb-2">
+                                PEMBENTUKAN TIM PELAKSANA INOVASI DAERAH
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start mb-4">
+                            <div class="font-bold w-32">JUDUL INOVASI :</div>
+                            <div id="outJudul" class="font-bold uppercase flex-1 border-b border-gray-300 pb-1">
+                                TODDOPULI (TRANSFORMASI OLAH DATA DAERAH PALOPO UNTUK PUBLIKASI DAN LAYANAN INOVASI)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <table class="sk-table mb-8">
+                        <thead>
+                            <tr>
+                                <th class="w-12 text-center">NO</th>
+                                <th class="w-1/3">NAMA</th>
+                                <th class="w-1/3">JABATAN</th>
+                                <th class="w-1/3">UNSUR/INSTANSI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="outTableBody">
+                            <!-- Data akan diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+
+                    <!-- Signature -->
+                    <div class="mt-16">
+                        <div class="flex justify-end">
+                            <div class="w-1/2 text-center">
+                                <div class="mb-2">
+                                    <span id="outPejabat" class="font-bold uppercase">WALI KOTA PALOPO,</span>
+                                </div>
+                                <div class="signature-area">
+                                    <img id="stampImg" class="stamp-image" style="display: none;">
+                                </div>
+                                <div class="mt-20">
+                                    <div id="outNamaPejabat" class="font-bold uppercase border-t border-black pt-2">
+                                        Dr. H. ANDI SYAHRIR MUH., M.Si.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="fixed inset-0 z-[1000]">
+        <div class="absolute inset-0 bg-black bg-opacity-80" onclick="closePreview()"></div>
+        <div class="relative w-full h-full flex flex-col">
+            <div class="bg-white p-4 shadow-lg z-10">
+                <div class="container mx-auto flex justify-between items-center">
+                    <h3 class="font-bold text-xl text-gray-800">Preview Dokumen SK</h3>
+                    <div class="flex gap-3">
+                        <button onclick="printDocument()" class="bg-blue-600 text-white px-6 py-2 rounded font-bold hover:bg-blue-700">
+                            🖨️ Cetak Dokumen
+                        </button>
+                        <button onclick="closePreview()" class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600">
+                            Tutup Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1 overflow-auto p-4">
+                <div class="container mx-auto max-w-4xl">
+                    <div id="modalContent" class="bg-white shadow-2xl p-8">
+                        <!-- Preview content akan dimuat di sini -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize data
+        let currentStamp = null;
+
+        // Function to sync input with preview
+        function sync() {
+            // Sync basic data
+            document.getElementById('outNomor').textContent = document.getElementById('inNomor').value || '........................';
+            document.getElementById('outTanggal').textContent = document.getElementById('inTanggal').value || '........................';
+            document.getElementById('outJudul').textContent = document.getElementById('inJudul').value || '..........................................................................................................................................';
+            document.getElementById('outPejabat').textContent = document.getElementById('inPejabat').value || '........................';
+            document.getElementById('outNamaPejabat').textContent = document.getElementById('inNamaPejabat').value || '........................';
+
+            // Sync table data
+            const tbody = document.getElementById('outTableBody');
+            tbody.innerHTML = '';
+            
+            let counter = 1;
+            const groups = document.querySelectorAll('.group-item');
+            
+            groups.forEach(group => {
+                const title = group.querySelector('.group-title').value;
+                if (title && title.trim() !== '') {
+                    // Add group header
+                    const headerRow = document.createElement('tr');
+                    headerRow.className = 'bg-gray-100';
+                    headerRow.innerHTML = `
+                        <td colspan="4" class="font-bold text-center py-2 border border-black">
+                            ${title}
+                        </td>
+                    `;
+                    tbody.appendChild(headerRow);
+                }
+
+                // Add group members
+                const members = group.querySelectorAll('.member-item');
+                members.forEach(mem => {
+                    const name = mem.querySelector('.mem-nama').value || '';
+                    const jab = mem.querySelector('.mem-jabatan').value || '';
+                    const uns = mem.querySelector('.mem-unsur').value || '';
+                    
+                    if (name.trim() !== '' || jab.trim() !== '' || uns.trim() !== '') {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="text-center border border-black">${counter}</td>
+                            <td class="border border-black">${name}</td>
+                            <td class="border border-black">${jab}</td>
+                            <td class="border border-black">${uns}</td>
+                        `;
+                        tbody.appendChild(row);
+                        counter++;
+                    }
+                });
+                
+                // Add spacing between groups
+                if (group !== groups[groups.length - 1]) {
+                    const spacerRow = document.createElement('tr');
+                    spacerRow.innerHTML = `<td colspan="4" class="py-1"></td>`;
+                    tbody.appendChild(spacerRow);
+                }
+            });
+
+            // If no data, show empty row
+            if (tbody.children.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="text-center border border-black">1</td>
+                    <td class="border border-black">.............................................................................................................................</td>
+                    <td class="border border-black">.............................................................................................................................</td>
+                    <td class="border border-black">.............................................................................................................................</td>
+                `;
+                tbody.appendChild(row);
+            }
+        }
+
+        // Function to add new group
+        function addGroup() {
+            const container = document.getElementById('groupContainer');
+            const div = document.createElement('div');
+            div.className = 'group-item bg-gray-50 p-4 rounded-lg border border-gray-300 relative';
+            div.innerHTML = `
+                <button onclick="removeGroup(this)" class="absolute top-2 right-2 text-red-500 hover:text-red-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <input type="text" placeholder="Nama Grup (Contoh: Tim IT / Tim Monev)" 
+                       class="group-title w-full p-2 mb-3 border-b-2 border-blue-500 font-bold text-blue-800 bg-transparent outline-none" 
+                       value="" oninput="sync()">
+                <div class="member-container space-y-3">
+                    <div class="member-item grid grid-cols-3 gap-2">
+                        <input type="text" placeholder="Nama Lengkap" class="mem-nama form-input text-sm" oninput="sync()">
+                        <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-sm" oninput="sync()">
+                        <input type="text" placeholder="Unsur/Instansi" class="mem-unsur form-input text-sm" oninput="sync()">
+                    </div>
+                </div>
+                <button onclick="addMember(this)" class="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Tambah Anggota
+                </button>
+            `;
+            container.appendChild(div);
+            sync();
+        }
+
+        // Function to remove group
+        function removeGroup(button) {
+            if (document.querySelectorAll('.group-item').length > 1) {
+                button.closest('.group-item').remove();
+                sync();
+            } else {
+                alert('Minimal harus ada satu grup!');
+            }
+        }
+
+        // Function to add member to group
+        function addMember(button) {
+            const container = button.previousElementSibling;
+            const div = document.createElement('div');
+            div.className = 'member-item grid grid-cols-3 gap-2 relative group';
+            div.innerHTML = `
+                <input type="text" placeholder="Nama Lengkap" class="mem-nama form-input text-sm" oninput="sync()">
+                <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-sm" oninput="sync()">
+                <input type="text" placeholder="Unsur/Instansi" class="mem-unsur form-input text-sm" oninput="sync()">
+                <button onclick="this.parentElement.remove(); sync()" 
+                        class="absolute -right-8 top-1/2 transform -translate-y-1/2 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            `;
+            container.appendChild(div);
+            sync();
+        }
+
+        // Function to preview stamp image
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('stampImg');
+                img.src = e.target.result;
+                img.style.display = 'block';
+                currentStamp = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Function to clear stamp
+        function clearStamp() {
+            document.getElementById('inStamp').value = '';
+            document.getElementById('stampImg').style.display = 'none';
+            currentStamp = null;
+        }
+
+        // Function to open preview modal
+        function openPreview() {
+            // Clone the document
+            const originalDoc = document.getElementById('sk-document');
+            const clone = originalDoc.cloneNode(true);
+            
+            // Remove input elements and add print styling
+            clone.querySelectorAll('input, button, textarea').forEach(el => el.remove());
+            clone.classList.add('print-margin');
+            clone.style.border = 'none';
+            
+            // Add stamp if exists
+            if (currentStamp) {
+                const stampImg = clone.querySelector('#stampImg');
+                if (stampImg) {
+                    stampImg.src = currentStamp;
+                    stampImg.style.display = 'block';
+                }
+            }
+            
+            // Display in modal
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+            
+            // Show modal
+            document.getElementById('previewModal').classList.add('active');
+        }
+
+        // Function to close preview modal
+        function closePreview() {
+            document.getElementById('previewModal').classList.remove('active');
+        }
+
+        // Function to print document
+        function printDocument() {
+            // Prepare document for printing
+            const originalDoc = document.getElementById('sk-document');
+            const printWindow = window.open('', '_blank');
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>SK Inovasi Bapperida Palopo</title>
+                    <style>
+                        body {
+                            font-family: 'Times New Roman', Times, serif;
+                            font-size: 12pt;
+                            line-height: 1.5;
+                            margin: 2.5cm 2cm;
+                        }
+                        .sk-table {
+                            border-collapse: collapse;
+                            width: 100%;
+                            font-size: 11pt;
+                        }
+                        .sk-table th, .sk-table td {
+                            border: 1px solid #000000;
+                            padding: 6px 10px;
+                            text-align: left;
+                        }
+                        .sk-table th {
+                            background-color: #f3f4f6;
+                            font-weight: bold;
+                            text-align: center;
+                        }
+                        .document-line {
+                            border-bottom: 1px dotted #000;
+                            min-width: 100px;
+                            display: inline-block;
+                        }
+                        .signature-area {
+                            position: relative;
+                            min-height: 120px;
+                        }
+                        .stamp-image {
+                            position: absolute;
+                            max-height: 80px;
+                            max-width: 200px;
+                            opacity: 0.9;
+                        }
+                        @media print {
+                            body { margin: 2.5cm 2cm; }
+                        }
+                    </style>
+                </head>
+                <body>
+            `);
+            
+            // Clone and clean the document
+            const clone = originalDoc.cloneNode(true);
+            clone.querySelectorAll('input, button, textarea').forEach(el => el.remove());
+            clone.style.border = 'none';
+            clone.style.padding = '0';
+            clone.style.margin = '0';
+            
+            // Add stamp if exists
+            if (currentStamp) {
+                const stampImg = clone.querySelector('#stampImg');
+                if (stampImg) {
+                    stampImg.src = currentStamp;
+                    stampImg.style.display = 'block';
+                }
+            }
+            
+            printWindow.document.write(clone.outerHTML);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            
+            // Print after content loads
+            printWindow.onload = function() {
+                setTimeout(() => {
+                    printWindow.print();
+                    printWindow.close();
+                }, 500);
+            };
+        }
+
+        // Function to download as PDF (using browser's print to PDF)
+        function downloadPDF() {
+            printDocument();
+        }
+
+        // Function to reset form
+        function resetForm() {
+            if (confirm('Apakah Anda yakin ingin mereset semua data?')) {
+                // Reset inputs
+                document.getElementById('inNomor').value = '';
+                document.getElementById('inTanggal').value = '';
+                document.getElementById('inJudul').value = '';
+                document.getElementById('inPejabat').value = 'WALI KOTA PALOPO,';
+                document.getElementById('inNamaPejabat').value = '';
+                document.getElementById('inStamp').value = '';
+                
+                // Reset groups
+                const groupContainer = document.getElementById('groupContainer');
+                groupContainer.innerHTML = '';
+                
+                // Add default group
+                const defaultGroup = document.createElement('div');
+                defaultGroup.className = 'group-item bg-gray-50 p-4 rounded-lg border border-gray-300 relative';
+                defaultGroup.innerHTML = `
+                    <input type="text" placeholder="Nama Grup (Contoh: Tim Pelaksana)" 
+                           class="group-title w-full p-2 mb-3 border-b-2 border-blue-500 font-bold text-blue-800 bg-transparent outline-none" 
+                           value="Tim Pelaksana Utama" oninput="sync()">
+                    <div class="member-container space-y-3">
+                        <div class="member-item grid grid-cols-3 gap-2">
+                            <input type="text" placeholder="Nama Lengkap" class="mem-nama form-input text-sm" oninput="sync()">
+                            <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-sm" oninput="sync()">
+                            <input type="text" placeholder="Unsur/Instansi" class="mem-unsur form-input text-sm" oninput="sync()">
+                        </div>
+                    </div>
+                    <button onclick="addMember(this)" class="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Tambah Anggota
+                    </button>
+                `;
+                groupContainer.appendChild(defaultGroup);
+                
+                // Clear stamp
+                clearStamp();
+                
+                // Sync
+                sync();
+            }
+        }
+
+        // Toggle functions for document settings
+        function toggleHeader() {
+            const header = document.querySelector('#sk-document > div:first-child');
+            if (header) {
+                header.style.display = document.getElementById('chkHeader').checked ? 'block' : 'none';
+            }
+        }
+
+        function toggleBorders() {
+            const table = document.querySelector('.sk-table');
+            if (table) {
+                const borderStyle = document.getElementById('chkBorders').checked ? '1px solid #000000' : 'none';
+                table.querySelectorAll('th, td').forEach(cell => {
+                    cell.style.border = borderStyle;
+                });
+            }
+        }
+
+        function toggleGuide() {
+            const doc = document.getElementById('sk-document');
+            if (document.getElementById('chkGuide').checked) {
+                doc.classList.add('border-2', 'border-gray-300');
+            } else {
+                doc.classList.remove('border-2', 'border-gray-300');
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            sync();
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl + P to print
+                if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                    e.preventDefault();
+                    printDocument();
+                }
+                // Ctrl + S to save
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    openPreview();
+                }
+                // Escape to close preview
+                if (e.key === 'Escape') {
+                    closePreview();
+                }
+            });
+        };
+
+        // Auto-save to localStorage
+        setInterval(function() {
+            const formData = {
+                nomor: document.getElementById('inNomor').value,
+                tanggal: document.getElementById('inTanggal').value,
+                judul: document.getElementById('inJudul').value,
+                pejabat: document.getElementById('inPejabat').value,
+                namaPejabat: document.getElementById('inNamaPejabat').value,
+                groups: []
+            };
+            
+            document.querySelectorAll('.group-item').forEach(group => {
+                const groupData = {
+                    title: group.querySelector('.group-title').value,
+                    members: []
+                };
+                
+                group.querySelectorAll('.member-item').forEach(member => {
+                    groupData.members.push({
+                        nama: member.querySelector('.mem-nama').value,
+                        jabatan: member.querySelector('.mem-jabatan').value,
+                        unsur: member.querySelector('.mem-unsur').value
+                    });
+                });
+                
+                formData.groups.push(groupData);
+            });
+            
+            localStorage.setItem('skFormData', JSON.stringify(formData));
+        }, 3000);
+
+        // Load from localStorage if exists
+        window.addEventListener('load', function() {
+            const savedData = localStorage.getItem('skFormData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                
+                document.getElementById('inNomor').value = data.nomor || '';
+                document.getElementById('inTanggal').value = data.tanggal || '';
+                document.getElementById('inJudul').value = data.judul || '';
+                document.getElementById('inPejabat').value = data.pejabat || 'WALI KOTA PALOPO,';
+                document.getElementById('inNamaPejabat').value = data.namaPejabat || '';
+                
+                // Load groups
+                if (data.groups && data.groups.length > 0) {
+                    const container = document.getElementById('groupContainer');
+                    container.innerHTML = '';
+                    
+                    data.groups.forEach((group, index) => {
+                        const groupDiv = document.createElement('div');
+                        groupDiv.className = 'group-item bg-gray-50 p-4 rounded-lg border border-gray-300 relative';
+                        groupDiv.innerHTML = `
+                            ${index > 0 ? `<button onclick="removeGroup(this)" class="absolute top-2 right-2 text-red-500 hover:text-red-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>` : ''}
+                            <input type="text" placeholder="Nama Grup" 
+                                   class="group-title w-full p-2 mb-3 border-b-2 border-blue-500 font-bold text-blue-800 bg-transparent outline-none" 
+                                   value="${group.title || ''}" oninput="sync()">
+                            <div class="member-container space-y-3">
+                                ${group.members.map(member => `
+                                    <div class="member-item grid grid-cols-3 gap-2">
+                                        <input type="text" placeholder="Nama Lengkap" class="mem-nama form-input text-sm" 
+                                               value="${member.nama || ''}" oninput="sync()">
+                                        <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-sm" 
+                                               value="${member.jabatan || ''}" oninput="sync()">
+                                        <input type="text" placeholder="Unsur/Instansi" class="mem-unsur form-input text-sm" 
+                                               value="${member.unsur || ''}" oninput="sync()">
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <button onclick="addMember(this)" class="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                Tambah Anggota
+                            </button>
+                        `;
+                        container.appendChild(groupDiv);
+                    });
+                }
+                
+                sync();
+            }
+        });
+    </script>
+</body>
+</html>
