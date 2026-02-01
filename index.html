@@ -6,225 +6,164 @@
     <title>Generator SK Tim Inovasi Bapperida Palopo 2025</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&display=swap');
-        
+    @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&display=swap');
+    
+    body { 
+        font-family: 'Inter', sans-serif;
+        background: #f8fafc;
+    }
+    
+    /* Ukuran Kertas A4 & Aturan Cetak */
+    @page {
+        size: A4;
+    }
+
+    .document-font {
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 12pt;
+        line-height: 1.5; /* Line height lebih renggang agar rapi */
+    }
+
+    @media print {
+        .no-print { display: none !important; }
         body { 
-            font-family: 'Inter', sans-serif;
-            background: #f8fafc;
+            background: white !important; 
+            padding: 0 !important; 
+            margin: 0 !important;
         }
-        
-        .document-font {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 12pt;
-            line-height: 1.3;
+        .print-container { 
+            box-shadow: none !important; 
+            margin: 0 !important; 
+            padding: 0 !important;
+            width: 100% !important;
         }
+        /* Auto Page Break Rule */
+        .sk-table tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+        thead {
+            display: table-header-group; /* Header tabel muncul di setiap halaman baru */
+        }
+    }
 
-        @media print {
-            .no-print { display: none !important; }
-            body { 
-                background: white !important; 
-                padding: 0 !important; 
-                margin: 0 !important;
-            }
-            .print-container { 
-                box-shadow: none !important; 
-                margin: 0 !important; 
-                padding: 0 !important;
-                width: 100% !important;
-            }
-            .page-break { page-break-before: always; }
-        }
+    /* Tabel styling - Diperbaiki agar teks tidak menempel garis */
+    .sk-table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 11pt;
+        table-layout: fixed;
+        margin-top: 10px;
+        font-family: 'Times New Roman', Times, serif !important;
+        font-size: 11pt !important;
+        border-spacing: 0 !important;
+    }
+    
+    .sk-table th {
+        border: 1px solid #000000;
+        padding: 8px 10px; /* Padding lebih luas */
+        text-align: center;
+        vertical-align: middle;
+        font-weight: bold;
+        background-color: #f0f0f0;
+        border-collapse: collapse !important;
+    }
+    
+    .sk-table td {
+        border: 1px solid #000000;
+        padding: 8px 12px; /* Padding ditingkatkan agar teks tidak menempel garis */
+        text-align: left;
+        vertical-align: top;
+        line-height: 1.4;
+        word-wrap: break-word; /* Mencegah teks meluap */
+        border-collapse: collapse !important;
+    }
 
-        /* Tabel styling sesuai dokumen asli */
-        .sk-table {
-            border-collapse: collapse;
-            width: 100%;
-            font-size: 11pt;
-            table-layout: fixed;
-        }
-        
-        .sk-table th {
-            border: 1px solid #000000;
-            padding: 4px 6px;
-            text-align: center;
-            vertical-align: middle;
-            font-weight: bold;
-            background-color: #f0f0f0;
-            height: 35px;
-        }
-        
-        .sk-table td {
-            border: 1px solid #000000;
-            padding: 4px 6px;
-            text-align: left;
-            vertical-align: top;
-            line-height: 1.2;
-        }
-        
-        .no-column {
-            width: 35px !important;
-            text-align: center !important;
-        }
-        
-        .nama-column {
-            width: 28% !important;
-        }
-        
-        .jabatan-column {
-            width: 38% !important;
-        }
-        
-        .unsur-column {
-            width: 29% !important;
-        }
+    .sk-table td, .sk-table th {
+        padding: 4px 6px !important;
+        vertical-align: top !important;
+    }
 
-        .group-header {
-            background-color: #e8e8e8 !important;
-            font-weight: bold;
-            text-align: center !important;
-            border: 1px solid #000000;
-            padding: 3px !important;
-            font-size: 11pt;
-        }
+    .sk-table tr {
+        page-break-inside: avoid;
+    }
+    
+    
+    .no-column { width: 45px !important; text-align: center !important; }
+    .nama-column { width: 30% !important; }
+    .jabatan-column { width: 35% !important; }
+    .unsur-column { width: 25% !important; }
 
-        /* Modal Preview */
-        #previewModal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            overflow-y: auto;
-        }
-        
-        #previewModal.active {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    .group-header {
+        page-break-after: avoid; /* Jangan biarkan header grup sendirian di akhir halaman */
+        background-color: #e8e8e8 !important;
+        font-weight: bold;
+        text-align: center !important;
+        border: 1px solid #000000;
+        padding: 6px !important;
+    }
 
-        /* Input styling */
-        .form-input {
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            padding: 6px 10px;
-            width: 100%;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        
-        .form-input:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
-        }
+    /* Document styling - Menghapus garis bawah pada nomor/tanggal */
+    .document-line {
+        border-bottom: none; /* Garis dihapus sesuai permintaan */
+        min-width: 10px;
+        display: inline-block;
+        margin-left: 2px;
+        text-align: left;
+    }
 
-        /* Document styling */
-        .document-line {
-            border-bottom: 1px solid #000;
-            min-width: 200px;
-            display: inline-block;
-            margin-left: 5px;
-            text-align: left;
-        }
+    /* Signature area */
+    .signature-area {
+        position: relative;
+        min-height: 100px;
+        margin-top: 40px;
+        page-break-inside: avoid; /* Tanda tangan tidak terpotong halaman */
+    }
 
-        .catatan-text {
-            font-style: italic;
-            font-size: 10pt;
-            color: #555;
-            display: block;
-            margin-top: 2px;
-        }
+    /* Rest of UI Styles */
+    #previewModal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        overflow-y: auto;
+    }
+    
+    #previewModal.active { display: flex; flex-direction: column; align-items: center; }
 
-        /* Signature area */
-        .signature-area {
-            position: relative;
-            min-height: 80px;
-            margin-top: 60px;
-        }
-        
-        .stamp-image {
-            position: absolute;
-            max-height: 70px;
-            max-width: 160px;
-            opacity: 0.9;
-            z-index: 10;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+    .form-input {
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        padding: 6px 10px;
+        width: 100%;
+        font-size: 14px;
+    }
 
-        /* Button styling */
-        .btn-primary {
-            background-color: #1e40af;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: all 0.2s;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .btn-primary:hover {
-            background-color: #1e3a8a;
-        }
-        
-        .btn-secondary {
-            background-color: #6b7280;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: all 0.2s;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #4b5563;
-        }
-        
-        .btn-success {
-            background-color: #059669;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: all 0.2s;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .btn-success:hover {
-            background-color: #047857;
-        }
+    /* Tambahkan class khusus untuk memaksa break jika diperlukan */
+    .page-break {
+        page-break-before: always;
+    }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #a1a1a1;
-        }
-    </style>
+    /* Style untuk catatan dalam sel tabel */
+    .catatan-text {
+    font-style: italic;
+    color: #555;
+    display: block;
+    margin-top: 2px;
+    font-size: 10pt;
+    }
+    
+    .btn-primary { background-color: #1e40af; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; border: none; font-weight: 600; }
+    .btn-secondary { background-color: #6b7280; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; border: none; font-weight: 600; }
+    .btn-success { background-color: #059669; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; border: none; font-weight: 600; }
+</style>
 </head>
 <body class="bg-slate-100 min-h-screen">
 
@@ -351,7 +290,7 @@
                     </div>
                 </div>
                 
-                <div id="sk-document" class="print-container bg-white p-8 document-font w-[210mm] min-h-[297mm] mx-auto border border-gray-300 shadow-inner">
+                <div id="sk-document" class="print-container bg-white document-font w-[210mm] min-h-[297mm] mx-auto border border-gray-300 shadow-inner" style="padding: 1.5cm 1.5cm;">
                     <!-- Header Section -->
                     <div class="mb-6 leading-tight">
                         <div class="text-left mb-4">
@@ -489,7 +428,7 @@
                         // Format jabatan dengan catatan jika ada
                         let jabatanHtml = jabatan;
                         if (catatan && catatan.trim() !== '') {
-                            jabatanHtml += `<span class="catatan-text">${catatan}</span>`;
+                        jabatanHtml += `<br><span class="catatan-text">(${catatan})</span>`;
                         }
                         
                         row.innerHTML = `
@@ -714,7 +653,7 @@
                             font-family: 'Times New Roman', Times, serif;
                             font-size: 12pt;
                             line-height: 1.3;
-                            margin: 2.5cm 2cm;
+                            margin: 0cm 0cm;
                             background: white;
                         }
                         .sk-table {
@@ -761,16 +700,16 @@
                             font-size: 10pt;
                             color: #555;
                             display: block;
-                            margin-top: 2px;
+                            margin-top: 0px;
                         }
                         .document-line {
                             border-bottom: 1px solid #000;
                             min-width: 200px;
                             display: inline-block;
-                            margin-left: 5px;
+                            margin-left: 0px;
                         }
                         @media print {
-                            body { margin: 2.5cm 2cm; }
+                            body { margin: 0cm 0cm; }
                         }
                     </style>
                 </head>
@@ -817,135 +756,270 @@
 
         // Function to download as PDF
         async function downloadPDF() {
-            try {
-                // Show loading
-                const originalText = event.target.textContent;
-                event.target.innerHTML = '⏳ Membuat PDF...';
-                event.target.disabled = true;
-                
-                // Create optimized clone for PDF
-                const originalDoc = document.getElementById('sk-document');
-                const clone = originalDoc.cloneNode(true);
-                
-                // Clean up clone
-                clone.querySelectorAll('input, button, textarea').forEach(el => el.remove());
-                clone.style.border = 'none';
-                clone.style.boxShadow = 'none';
-                clone.style.padding = '2.5cm 2cm';
-                clone.style.width = '210mm';
-                clone.style.minHeight = '297mm';
-                clone.style.backgroundColor = 'white';
-                clone.style.margin = '0 auto';
-                
-                // Add stamp if exists
-                if (currentStamp) {
-                    const stampImg = clone.querySelector('#stampImg');
-                    if (stampImg) {
-                        stampImg.src = currentStamp;
-                        stampImg.style.display = 'block';
-                    }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    
+    // Ambil data dari form
+    const nomor = document.getElementById('inNomor').value || '........................';
+    const tanggal = document.getElementById('inTanggal').value || '........................';
+    const header = document.getElementById('inHeader').value || '';
+    const judul = document.getElementById('inJudul').value || '';
+    const pejabat = document.getElementById('inPejabat').value || '';
+    const namaPejabat = document.getElementById('inNamaPejabat').value || '';
+    
+    // Set font Times New Roman
+    doc.setFont("Times", "normal");
+    doc.setFontSize(12);
+    
+    // Margins
+    const marginLeft = 20;
+    const marginRight = 20;
+    const marginTop = 25;
+    
+    // Header dokumen
+    doc.text("LAMPIRAN SURAT KEPUTUSAN WALI KOTA PALOPO", 
+             (marginLeft + (210 - marginLeft - marginRight) / 2), 
+             marginTop, { align: 'center' });
+    
+    doc.text(`NOMOR : ${nomor}`, marginLeft, marginTop + 10);
+    doc.text(`TANGGAL : ${tanggal}`, marginLeft, marginTop + 17);
+    
+    // Judul header (center, bold)
+    doc.setFont("Times", "bold");
+    const headerLines = doc.splitTextToSize(header, 170);
+    let currentY = marginTop + 30;
+    headerLines.forEach(line => {
+        doc.text(line, 105, currentY, { align: 'center' });
+        currentY += 7;
+    });
+    
+    // Judul inovasi
+    doc.setFont("Times", "normal");
+    doc.text(`Judul Inovasi : ${judul}`, marginLeft, currentY + 5);
+    
+    // Siapkan data tabel
+    let tableData = [];
+    let counter = 1;
+    const groups = document.querySelectorAll('.group-item');
+    
+    groups.forEach((group, groupIndex) => {
+        const title = group.querySelector('.group-title').value;
+        
+        // Tambahkan header grup jika ada judul
+        if (title && title.trim() !== '') {
+            tableData.push([
+                { 
+                    content: title, 
+                    colSpan: 4, 
+                    styles: { 
+                        fillColor: [232, 232, 232],
+                        fontStyle: 'bold',
+                        halign: 'center',
+                        cellPadding: { top: 4, right: 2, bottom: 4, left: 2 },
+                        textColor: [0, 0, 0]
+                    } 
+                },
+                {}, // placeholder untuk colSpan
+                {}, // placeholder untuk colSpan
+                {}  // placeholder untuk colSpan
+            ]);
+        }
+        
+        // Tambahkan anggota
+        const members = group.querySelectorAll('.member-item');
+        members.forEach(mem => {
+            const name = mem.querySelector('.mem-nama').value || '';
+            let jabatan = mem.querySelector('.mem-jabatan').value || '';
+            const unsur = mem.querySelector('.mem-unsur').value || '';
+            const catatan = mem.querySelector('.mem-catatan') ? mem.querySelector('.mem-catatan').value : '';
+            
+            if (name.trim() !== '' || jabatan.trim() !== '' || unsur.trim() !== '') {
+                // Format jabatan dengan catatan
+                let jabatanText = jabatan;
+                if (catatan && catatan.trim() !== '') {
+                    jabatanText += `\n(${catatan})`;
                 }
                 
-                // Optimize table for PDF
-                const table = clone.querySelector('table');
-                if (table) {
-                    table.style.borderCollapse = 'collapse';
-                    table.style.width = '100%';
-                    table.style.fontSize = '11pt';
-                    table.style.tableLayout = 'fixed';
-                    
-                    // Ensure proper column widths
-                    const ths = table.querySelectorAll('th');
-                    const tds = table.querySelectorAll('td');
-                    
-                    if (ths.length >= 4) {
-                        ths[0].style.width = '35px';
-                        ths[0].style.textAlign = 'center';
-                        ths[1].style.width = '28%';
-                        ths[2].style.width = '38%';
-                        ths[3].style.width = '29%';
-                    }
-                    
-                    // Apply styles to all cells
-                    const allCells = table.querySelectorAll('th, td');
-                    allCells.forEach(cell => {
-                        cell.style.border = '1px solid black';
-                        cell.style.padding = '4px 6px';
-                        cell.style.verticalAlign = 'top';
-                    });
-                }
-                
-                // Create temporary container
-                const tempContainer = document.createElement('div');
-                tempContainer.style.position = 'absolute';
-                tempContainer.style.left = '-9999px';
-                tempContainer.style.top = '0';
-                tempContainer.style.width = '210mm';
-                tempContainer.style.minHeight = '297mm';
-                tempContainer.style.padding = '2.5cm 2cm';
-                tempContainer.style.backgroundColor = 'white';
-                tempContainer.appendChild(clone);
-                document.body.appendChild(tempContainer);
-                
-                // Use html2canvas to capture with high quality
-                const canvas = await html2canvas(clone, {
-                    scale: 3, // Higher scale for better quality
-                    useCORS: true,
-                    logging: false,
-                    backgroundColor: '#ffffff',
-                    width: 210 * 3.78, // Convert mm to pixels (1mm = 3.78px)
-                    height: 297 * 3.78,
-                    windowWidth: 210 * 3.78,
-                    windowHeight: 297 * 3.78
+                tableData.push([
+                    { content: counter.toString(), styles: { halign: 'center' } },
+                    name,
+                    { 
+                        content: jabatanText, 
+                        styles: { 
+                            cellWidth: 75,
+                            valign: 'top'
+                        } 
+                    },
+                    unsur
+                ]);
+                counter++;
+            }
+        });
+        
+        // Tambahkan baris kosong antar grup (kecuali grup terakhir)
+        if (groupIndex < groups.length - 1) {
+            tableData.push([
+                { content: '', colSpan: 4, styles: { fillColor: [255, 255, 255] } },
+                {}, {}, {}
+            ]);
+        }
+    });
+    
+    // Mulai tabel dari posisi Y yang tepat
+    const startY = currentY + 15;
+    
+    // Buat tabel dengan autoTable
+    doc.autoTable({
+        startY: startY,
+        head: [
+            [
+                { content: 'NO', styles: { halign: 'center', fontStyle: 'bold' } },
+                { content: 'NAMA', styles: { halign: 'center', fontStyle: 'bold' } },
+                { content: 'JABATAN', styles: { halign: 'center', fontStyle: 'bold' } },
+                { content: 'UNSUR/INSTANSI', styles: { halign: 'center', fontStyle: 'bold' } }
+            ]
+        ],
+        body: tableData,
+        theme: 'grid',
+        styles: {
+            font: 'Times',
+            fontSize: 11,
+            cellPadding: { top: 5, right: 4, bottom: 5, left: 4 },
+            lineColor: [0, 0, 0],
+            lineWidth: 0.1,
+            valign: 'top'
+        },
+        headStyles: {
+            fillColor: [240, 240, 240],
+            fontStyle: 'bold',
+            textColor: [0, 0, 0],
+            halign: 'center',
+            lineWidth: 0.1
+        },
+        columnStyles: {
+            0: { 
+                cellWidth: 15, 
+                halign: 'center',
+                lineWidth: 0.1
+            },
+            1: { 
+                cellWidth: 50,
+                lineWidth: 0.1
+            },
+            2: { 
+                cellWidth: 75,
+                lineWidth: 0.1
+            },
+            3: { 
+                cellWidth: 50,
+                lineWidth: 0.1
+            }
+        },
+        margin: { 
+            left: marginLeft, 
+            right: marginRight,
+            top: startY
+        },
+        tableWidth: 170,
+        didDrawPage: function(data) {
+            // Header tabel berulang di setiap halaman
+            if (data.pageNumber > 1) {
+                doc.autoTable({
+                    head: [[
+                        { content: 'NO', styles: { halign: 'center', fontStyle: 'bold' } },
+                        { content: 'NAMA', styles: { halign: 'center', fontStyle: 'bold' } },
+                        { content: 'JABATAN', styles: { halign: 'center', fontStyle: 'bold' } },
+                        { content: 'UNSUR/INSTANSI', styles: { halign: 'center', fontStyle: 'bold' } }
+                    ]],
+                    body: [],
+                    startY: marginTop,
+                    theme: 'grid',
+                    styles: { fontSize: 11, cellPadding: 4 },
+                    headStyles: {
+                        fillColor: [240, 240, 240],
+                        fontStyle: 'bold',
+                        textColor: [0, 0, 0],
+                        halign: 'center'
+                    },
+                    margin: { left: marginLeft, right: marginRight },
+                    tableWidth: 170
                 });
-                
-                // Remove temp container
-                document.body.removeChild(tempContainer);
-                
-                // Convert to PDF
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4',
-                    compress: true
-                });
-                
-                const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
-                
-                // Calculate dimensions to fit A4
-                const imgWidth = canvas.width;
-                const imgHeight = canvas.height;
-                const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-                const imgWidthFinal = imgWidth * ratio * 0.264583; // Convert pixels to mm
-                const imgHeightFinal = imgHeight * ratio * 0.264583;
-                
-                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                
-                // Save PDF
-                const nomorSK = document.getElementById('inNomor').value || 'SK-TIM-INOVASI';
-                const tanggalSK = document.getElementById('inTanggal').value || '2025';
-                const fileName = `SK_TIM_INOVASI_${nomorSK.replace(/[\/\\:*?"<>|]/g, '_')}_${tanggalSK.replace(/ /g, '_')}.pdf`;
-                
-                pdf.save(fileName);
-                
-                // Reset button
-                event.target.innerHTML = originalText;
-                event.target.disabled = false;
-                
-            } catch (error) {
-                console.error('Error generating PDF:', error);
-                alert('Terjadi kesalahan saat membuat PDF. Silakan coba lagi atau gunakan fitur cetak browser.');
-                
-                // Reset button
-                if (event && event.target) {
-                    event.target.innerHTML = '⬇️ Download PDF';
-                    event.target.disabled = false;
-                }
+            }
+            
+            // Nomor halaman
+            const pageCount = doc.internal.getNumberOfPages();
+            doc.setFontSize(10);
+            doc.text(
+                `Halaman ${data.pageNumber} dari ${pageCount}`,
+                marginLeft,
+                doc.internal.pageSize.height - 10
+            );
+        },
+        willDrawCell: function(data) {
+            // Custom styling untuk header grup
+            if (data.section === 'body' && data.row.raw[0].colSpan === 4) {
+                data.cell.styles.fillColor = [232, 232, 232];
+                data.cell.styles.fontStyle = 'bold';
+                data.cell.styles.halign = 'center';
             }
         }
+    });
+    
+    // Tambahkan bagian tanda tangan
+    let finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 30 : startY + 200;
+    
+    // Pastikan tidak melebihi batas halaman
+    if (finalY > 250) {
+        doc.addPage();
+        finalY = marginTop;
+    }
+    
+    // Teks pejabat
+    doc.setFontSize(12);
+    doc.setFont("Times", "normal");
+    doc.text(pejabat, marginLeft + 130, finalY, { align: 'right' });
+    
+    // Gambar stempel jika ada
+    if (currentStamp) {
+        try {
+            const img = new Image();
+            img.src = currentStamp;
+            
+            // Tunggu gambar dimuat
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = reject;
+                setTimeout(resolve, 1000); // Timeout untuk safety
+            });
+            
+            // Tambahkan stempel dengan ukuran yang sesuai
+            const stampWidth = 30;
+            const stampHeight = 30;
+            doc.addImage(
+                img, 
+                'PNG', 
+                marginLeft + 115, 
+                finalY + 10, 
+                stampWidth, 
+                stampHeight
+            );
+        } catch (error) {
+            console.log('Gagal memuat stempel:', error);
+        }
+    }
+    
+    // Garis tanda tangan
+    doc.setLineWidth(0.5);
+    doc.line(marginLeft + 130, finalY + 45, marginLeft + 190, finalY + 45);
+    
+    // Nama pejabat
+    finalY += 55;
+    doc.setFont("Times", "bold");
+    doc.text(namaPejabat.toUpperCase(), marginLeft + 160, finalY, { align: 'center' });
+    
+    // Simpan PDF
+    doc.save(`SK_TIM_INOVASI_${new Date().getTime()}.pdf`);
+}
 
         // Function to reset form
         function resetForm() {
@@ -1055,6 +1129,7 @@
             // Sync initial data
             sync();
         };
+        
     </script>
 </body>
 </html>
