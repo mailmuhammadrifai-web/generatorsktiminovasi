@@ -159,6 +159,10 @@
     margin-top: 2px;
     font-size: 10pt;
     }
+
+    .member-item.grid-cols-5 {
+    grid-template-columns: 1fr 1fr 1fr 1fr auto;
+    }
     
     .btn-primary { background-color: #1e40af; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; border: none; font-weight: 600; }
     .btn-secondary { background-color: #6b7280; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; border: none; font-weight: 600; }
@@ -485,24 +489,32 @@
                 </div>
                 <div class="member-container space-y-2">
                     ${members.length > 0 ? members.map(member => `
-                        <div class="member-item grid grid-cols-4 gap-1">
-                            <input type="text" placeholder="Nama" class="mem-nama form-input text-xs" 
-                                   value="${member.nama || ''}" oninput="sync()">
-                            <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-xs" 
-                                   value="${member.jabatan || ''}" oninput="sync()">
-                            <input type="text" placeholder="Unsur" class="mem-unsur form-input text-xs" 
-                                   value="${member.unsur || ''}" oninput="sync()">
-                            <input type="text" placeholder="Catatan" class="mem-catatan form-input text-xs" 
-                                   value="${member.catatan || ''}" oninput="sync()">
-                        </div>
-                    `).join('') : `
-                        <div class="member-item grid grid-cols-4 gap-1">
-                            <input type="text" placeholder="Nama" class="mem-nama form-input text-xs" oninput="sync()">
-                            <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-xs" oninput="sync()">
-                            <input type="text" placeholder="Unsur" class="mem-unsur form-input text-xs" oninput="sync()">
-                            <input type="text" placeholder="Catatan" class="mem-catatan form-input text-xs" oninput="sync()">
-                        </div>
-                    `}
+    <div class="member-item grid grid-cols-5 gap-1">
+        <input type="text" placeholder="Nama" class="mem-nama form-input text-xs" 
+               value="${member.nama || ''}" oninput="sync()">
+        <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-xs" 
+               value="${member.jabatan || ''}" oninput="sync()">
+        <input type="text" placeholder="Unsur" class="mem-unsur form-input text-xs" 
+               value="${member.unsur || ''}" oninput="sync()">
+        <input type="text" placeholder="Catatan" class="mem-catatan form-input text-xs" 
+               value="${member.catatan || ''}" oninput="sync()">
+        <button onclick="removeMember(this)" 
+                class="bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">
+            Hapus
+        </button>
+    </div>
+`).join('') : `
+    <div class="member-item grid grid-cols-5 gap-1">
+        <input type="text" placeholder="Nama" class="mem-nama form-input text-xs" oninput="sync()">
+        <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-xs" oninput="sync()">
+        <input type="text" placeholder="Unsur" class="mem-unsur form-input text-xs" oninput="sync()">
+        <input type="text" placeholder="Catatan" class="mem-catatan form-input text-xs" oninput="sync()">
+        <button onclick="removeMember(this)" 
+                class="bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">
+            Hapus
+        </button>
+    </div>
+`}
                 </div>
                 <button onclick="addMember(this)" class="mt-2 text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -511,30 +523,29 @@
                     Tambah Anggota
                 </button>
             `;
+            
             container.appendChild(div);
             sync();
         }
 
         // Function to add member to group
-        function addMember(button) {
-            const container = button.previousElementSibling;
-            const div = document.createElement('div');
-            div.className = 'member-item grid grid-cols-4 gap-1 relative group';
-            div.innerHTML = `
-                <input type="text" placeholder="Nama" class="mem-nama form-input text-xs" oninput="sync()">
-                <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-xs" oninput="sync()">
-                <input type="text" placeholder="Unsur" class="mem-unsur form-input text-xs" oninput="sync()">
-                <input type="text" placeholder="Catatan" class="mem-catatan form-input text-xs" oninput="sync()">
-                <button onclick="this.parentElement.remove(); sync()" 
-                        class="absolute -right-6 top-1/2 transform -translate-y-1/2 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            `;
-            container.appendChild(div);
-            sync();
-        }
+function addMember(button) {
+    const container = button.previousElementSibling;
+    const div = document.createElement('div');
+    div.className = 'member-item grid grid-cols-5 gap-1 relative group';
+    div.innerHTML = `
+        <input type="text" placeholder="Nama" class="mem-nama form-input text-xs" oninput="sync()">
+        <input type="text" placeholder="Jabatan" class="mem-jabatan form-input text-xs" oninput="sync()">
+        <input type="text" placeholder="Unsur" class="mem-unsur form-input text-xs" oninput="sync()">
+        <input type="text" placeholder="Catatan" class="mem-catatan form-input text-xs" oninput="sync()">
+        <button onclick="removeMember(this)" 
+                class="bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">
+            Hapus
+        </button>
+    `;
+    container.appendChild(div);
+    sync();
+}
 
         // Function to remove group
         function removeGroup(button) {
@@ -544,6 +555,13 @@
             } else {
                 alert('Minimal harus ada satu grup!');
             }
+        }
+        function removeMember(button) {
+            const memberItem = button.closest('.member-item');
+            if (memberItem) {
+            memberItem.remove();
+            sync();
+        }
         }
 
         // Function to preview stamp image
@@ -755,9 +773,20 @@
         }
 
         // Function to download as PDF
-        async function downloadPDF() {
+        // Function to download as PDF
+async function downloadPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('p', 'mm', 'a4');
+    
+    // Margins
+    const marginLeft = 20;
+    const marginRight = 25;
+    const marginTop = 25;
+    const marginBottom = 20;
+    
+    const pageWidth = 210;
+    const pageHeight = 297;
+    const contentWidth = pageWidth - marginLeft - marginRight;
     
     // Ambil data dari form
     const nomor = document.getElementById('inNomor').value || '........................';
@@ -769,33 +798,54 @@
     
     // Set font Times New Roman
     doc.setFont("Times", "normal");
-    doc.setFontSize(12);
-    
-    // Margins
-    const marginLeft = 20;
-    const marginRight = 20;
-    const marginTop = 25;
+    doc.setFontSize(11);
     
     // Header dokumen
     doc.text("LAMPIRAN SURAT KEPUTUSAN WALI KOTA PALOPO", 
-             (marginLeft + (210 - marginLeft - marginRight) / 2), 
+             marginLeft + (contentWidth / 2), 
              marginTop, { align: 'center' });
     
     doc.text(`NOMOR : ${nomor}`, marginLeft, marginTop + 10);
     doc.text(`TANGGAL : ${tanggal}`, marginLeft, marginTop + 17);
     
-    // Judul header (center, bold)
+    // Judul header
     doc.setFont("Times", "bold");
-    const headerLines = doc.splitTextToSize(header, 170);
+    const headerLines = doc.splitTextToSize(header, contentWidth - 10);
     let currentY = marginTop + 30;
     headerLines.forEach(line => {
-        doc.text(line, 105, currentY, { align: 'center' });
+        doc.text(line, marginLeft + (contentWidth / 2), currentY, { align: 'center' });
         currentY += 7;
     });
     
     // Judul inovasi
     doc.setFont("Times", "normal");
-    doc.text(`Judul Inovasi : ${judul}`, marginLeft, currentY + 5);
+    // Hanya tambahkan 2mm setelah header, bukan 5mm
+    currentY += 2;
+    
+    // Tulis "Judul Inovasi :" tanpa garis baru
+    doc.text("Judul Inovasi :", marginLeft, currentY);
+    
+    // Hitung lebar teks "Judul Inovasi :"
+    const labelWidth = doc.getTextWidth("Judul Inovasi : ");
+    
+    // Tulis judul inovasi di sebelah kanan label
+    const judulLines = doc.splitTextToSize(judul, contentWidth - labelWidth);
+    
+    // Jika judul hanya satu baris
+    if (judulLines.length === 1) {
+        doc.text(judulLines[0], marginLeft + labelWidth, currentY);
+        currentY += 6; // Tinggi baris tunggal
+    } else {
+        // Jika judul lebih dari satu baris
+        doc.text(judulLines[0], marginLeft + labelWidth, currentY);
+        currentY += 6;
+        
+        // Tulis baris kedua dan seterusnya dengan indentasi
+        for (let i = 1; i < judulLines.length; i++) {
+            doc.text(judulLines[i], marginLeft + 10, currentY); // Indent 10mm
+            currentY += 6;
+        }
+    }
     
     // Siapkan data tabel
     let tableData = [];
@@ -816,12 +866,12 @@
                         fontStyle: 'bold',
                         halign: 'center',
                         cellPadding: { top: 4, right: 2, bottom: 4, left: 2 },
-                        textColor: [0, 0, 0]
+                        textColor: [0, 0, 0],
+                        font: "Times",
+                        fontSize: 11
                     } 
                 },
-                {}, // placeholder untuk colSpan
-                {}, // placeholder untuk colSpan
-                {}  // placeholder untuk colSpan
+                {}, {}, {}
             ]);
         }
         
@@ -841,184 +891,229 @@
                 }
                 
                 tableData.push([
-                    { content: counter.toString(), styles: { halign: 'center' } },
-                    name,
+                    { 
+                        content: counter.toString(), 
+                        styles: { 
+                            halign: 'center',
+                            valign: 'top',
+                            cellPadding: { top: 4, right: 2, bottom: 4, left: 2 }
+                        } 
+                    },
+                    { 
+                        content: name, 
+                        styles: { 
+                            valign: 'top',
+                            cellPadding: { top: 4, right: 2, bottom: 4, left: 2 }
+                        } 
+                    },
                     { 
                         content: jabatanText, 
                         styles: { 
-                            cellWidth: 75,
-                            valign: 'top'
+                            valign: 'top',
+                            cellPadding: { top: 4, right: 2, bottom: 4, left: 2 }
                         } 
                     },
-                    unsur
+                    { 
+                        content: unsur, 
+                        styles: { 
+                            valign: 'top',
+                            cellPadding: { top: 4, right: 2, bottom: 4, left: 2 }
+                        } 
+                    }
                 ]);
                 counter++;
             }
         });
         
-        // Tambahkan baris kosong antar grup (kecuali grup terakhir)
-        if (groupIndex < groups.length - 1) {
+        // Tambahkan baris kosong kecil antar grup (kecuali grup terakhir)
+        if (groupIndex < groups.length - 1 && tableData.length > 0) {
             tableData.push([
-                { content: '', colSpan: 4, styles: { fillColor: [255, 255, 255] } },
+                { content: '', colSpan: 4, styles: { fillColor: [255, 255, 255], cellPadding: 1 } },
                 {}, {}, {}
             ]);
         }
     });
     
-    // Mulai tabel dari posisi Y yang tepat
-    const startY = currentY + 15;
+    // Mulai tabel dari posisi Y yang tepat - DIUBAH: Jarak dikurangi dari 10mm menjadi 5mm
+    const startY = currentY + 5;
+    
+    // Hitung lebar kolom yang proporsional
+    const colWidths = {
+        no: 15,      // Lebar kolom No diperbesar menjadi 15mm
+        nama: 45,    // Lebar kolom Nama
+        jabatan: 65, // Lebar kolom Jabatan
+        unsur: 45    // Lebar kolom Unsur
+    };
+    
+    // Total lebar harus sesuai dengan contentWidth
+    const totalWidth = colWidths.no + colWidths.nama + colWidths.jabatan + colWidths.unsur;
     
     // Buat tabel dengan autoTable
     doc.autoTable({
         startY: startY,
         head: [
             [
-                { content: 'NO', styles: { halign: 'center', fontStyle: 'bold' } },
-                { content: 'NAMA', styles: { halign: 'center', fontStyle: 'bold' } },
-                { content: 'JABATAN', styles: { halign: 'center', fontStyle: 'bold' } },
-                { content: 'UNSUR/INSTANSI', styles: { halign: 'center', fontStyle: 'bold' } }
+                { content: 'NO', styles: { halign: 'center', fontStyle: 'bold', cellPadding: 4 } },
+                { content: 'NAMA', styles: { halign: 'center', fontStyle: 'bold', cellPadding: 4 } },
+                { content: 'JABATAN', styles: { halign: 'center', fontStyle: 'bold', cellPadding: 4 } },
+                { content: 'UNSUR/INSTANSI', styles: { halign: 'center', fontStyle: 'bold', cellPadding: 4 } }
             ]
         ],
         body: tableData,
         theme: 'grid',
         styles: {
             font: 'Times',
-            fontSize: 11,
-            cellPadding: { top: 5, right: 4, bottom: 5, left: 4 },
+            fontSize: 10,
+            cellPadding: { top: 3, right: 3, bottom: 3, left: 3 },
             lineColor: [0, 0, 0],
             lineWidth: 0.1,
-            valign: 'top'
+            valign: 'top',
+            overflow: 'linebreak',
+            textColor: [0, 0, 0]
         },
         headStyles: {
             fillColor: [240, 240, 240],
             fontStyle: 'bold',
             textColor: [0, 0, 0],
             halign: 'center',
-            lineWidth: 0.1
+            lineWidth: 0.1,
+            cellPadding: { top: 4, right: 3, bottom: 4, left: 3 },
+            font: 'Times'
         },
         columnStyles: {
             0: { 
-                cellWidth: 15, 
+                cellWidth: colWidths.no,
                 halign: 'center',
                 lineWidth: 0.1
             },
             1: { 
-                cellWidth: 50,
+                cellWidth: colWidths.nama,
                 lineWidth: 0.1
             },
             2: { 
-                cellWidth: 75,
+                cellWidth: colWidths.jabatan,
                 lineWidth: 0.1
             },
             3: { 
-                cellWidth: 50,
+                cellWidth: colWidths.unsur,
                 lineWidth: 0.1
             }
         },
         margin: { 
             left: marginLeft, 
-            right: marginRight,
-            top: startY
+            right: marginRight
         },
-        tableWidth: 170,
-        didDrawPage: function(data) {
-            // Header tabel berulang di setiap halaman
-            if (data.pageNumber > 1) {
-                doc.autoTable({
-                    head: [[
-                        { content: 'NO', styles: { halign: 'center', fontStyle: 'bold' } },
-                        { content: 'NAMA', styles: { halign: 'center', fontStyle: 'bold' } },
-                        { content: 'JABATAN', styles: { halign: 'center', fontStyle: 'bold' } },
-                        { content: 'UNSUR/INSTANSI', styles: { halign: 'center', fontStyle: 'bold' } }
-                    ]],
-                    body: [],
-                    startY: marginTop,
-                    theme: 'grid',
-                    styles: { fontSize: 11, cellPadding: 4 },
-                    headStyles: {
-                        fillColor: [240, 240, 240],
-                        fontStyle: 'bold',
-                        textColor: [0, 0, 0],
-                        halign: 'center'
-                    },
-                    margin: { left: marginLeft, right: marginRight },
-                    tableWidth: 170
-                });
-            }
-            
-            // Nomor halaman
-            const pageCount = doc.internal.getNumberOfPages();
-            doc.setFontSize(10);
-            doc.text(
-                `Halaman ${data.pageNumber} dari ${pageCount}`,
-                marginLeft,
-                doc.internal.pageSize.height - 10
-            );
-        },
+        tableWidth: totalWidth,
+        showHead: 'everyPage', // Tampilkan header di setiap halaman
+        pageBreak: 'auto',
+        rowPageBreak: 'avoid',
         willDrawCell: function(data) {
             // Custom styling untuk header grup
             if (data.section === 'body' && data.row.raw[0].colSpan === 4) {
                 data.cell.styles.fillColor = [232, 232, 232];
                 data.cell.styles.fontStyle = 'bold';
                 data.cell.styles.halign = 'center';
+                data.cell.styles.fontSize = 11;
+                data.cell.styles.font = 'Times';
+            }
+            
+            // Styling untuk teks catatan di dalam sel jabatan
+            const cellText = data.cell.text ? data.cell.text.toString() : '';
+            if (cellText.includes('(') && cellText.includes(')')) {
+                // Jika ada tanda kurung (catatan), atur font style
+                data.cell.styles.fontSize = 9;
+                data.cell.styles.fontStyle = 'italic';
             }
         }
     });
     
-    // Tambahkan bagian tanda tangan
-    let finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 30 : startY + 200;
+    // Hitung posisi akhir tabel
+    let finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 20 : startY + 100;
     
-    // Pastikan tidak melebihi batas halaman
-    if (finalY > 250) {
+    // Jika posisi akhir melebihi batas halaman, buat halaman baru untuk tanda tangan
+    if (finalY > (pageHeight - marginBottom - 60)) {
         doc.addPage();
-        finalY = marginTop;
+        finalY = marginTop + 20;
     }
     
-    // Teks pejabat
-    doc.setFontSize(12);
-    doc.setFont("Times", "normal");
-    doc.text(pejabat, marginLeft + 130, finalY, { align: 'right' });
-    
-    // Gambar stempel jika ada
-    if (currentStamp) {
-        try {
-            const img = new Image();
-            img.src = currentStamp;
-            
-            // Tunggu gambar dimuat
-            await new Promise((resolve, reject) => {
-                img.onload = resolve;
-                img.onerror = reject;
-                setTimeout(resolve, 1000); // Timeout untuk safety
-            });
-            
-            // Tambahkan stempel dengan ukuran yang sesuai
-            const stampWidth = 30;
-            const stampHeight = 30;
-            doc.addImage(
-                img, 
-                'PNG', 
-                marginLeft + 115, 
-                finalY + 10, 
-                stampWidth, 
-                stampHeight
-            );
-        } catch (error) {
-            console.log('Gagal memuat stempel:', error);
-        }
+    // ================================================
+// BAGIAN TANDA TANGAN - POSISI TRADISIONAL
+// ================================================
+
+// Posisi X untuk tanda tangan - sekitar 100-120mm dari kiri
+const signatureBaseX = 130; // 130mm dari kiri halaman
+
+// 1. Teks Pejabat Penandatangan
+doc.setFontSize(12);
+doc.setFont("Times", "normal");
+const pejabatText = pejabat.trim();
+doc.text(pejabatText, signatureBaseX, finalY);
+
+// 2. Gambar Stempel (jika ada)
+let stampY = finalY + 12;
+
+if (currentStamp) {
+    try {
+        const img = new Image();
+        img.src = currentStamp;
+        
+        await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+            setTimeout(resolve, 1000);
+        });
+        
+        // Stempel diletakkan di atas/sebelah kiri garis tanda tangan
+        const stampWidth = 40;
+        const stampHeight = 40;
+        const stampX = signatureBaseX - 15; // 15mm di kiri teks pejabat
+        const stampY = finalY + 8;
+        
+        doc.addImage(
+            img, 
+            'PNG', 
+            stampX, 
+            stampY, 
+            stampWidth, 
+            stampHeight
+        );
+        
+        stampY = finalY + 8 + stampHeight + 10;
+    } catch (error) {
+        console.log('Gagal memuat stempel:', error);
+        stampY = finalY + 30;
     }
-    
-    // Garis tanda tangan
-    doc.setLineWidth(0.5);
-    doc.line(marginLeft + 130, finalY + 45, marginLeft + 190, finalY + 45);
-    
-    // Nama pejabat
-    finalY += 55;
-    doc.setFont("Times", "bold");
-    doc.text(namaPejabat.toUpperCase(), marginLeft + 160, finalY, { align: 'center' });
+} else {
+    stampY = finalY + 30;
+}
+
+// 3. Garis Tanda Tangan
+const lineLength = 60;
+const lineX = signatureBaseX;
+const lineY = stampY;
+
+doc.setLineWidth(0.5);
+doc.line(lineX, lineY, lineX + lineLength, lineY);
+
+// 4. Nama Pejabat di bawah garis
+const namaY = lineY + 10;
+
+doc.setFont("Times", "bold");
+doc.setFontSize(12);
+
+const namaText = namaPejabat.toUpperCase().trim();
+
+// Tengahkan nama pejabat di bawah garis
+doc.text(
+    namaText, 
+    lineX + (lineLength / 2), 
+    namaY, 
+    { align: 'center' }
+);
     
     // Simpan PDF
-    doc.save(`SK_TIM_INOVASI_${new Date().getTime()}.pdf`);
+    const filename = `SK_TIM_INOVASI_${new Date().getFullYear()}_${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}_${String(new Date().getHours()).padStart(2, '0')}${String(new Date().getMinutes()).padStart(2, '0')}.pdf`;
+    doc.save(filename);
 }
 
         // Function to reset form
